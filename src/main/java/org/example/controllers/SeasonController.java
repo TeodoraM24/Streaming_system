@@ -6,22 +6,50 @@ import org.example.entities.Season;
 import org.example.entities.Show;
 import org.example.repositories.SeasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/seasons")
 public class SeasonController {
-
     @Autowired private SeasonRepository repository;
     @Autowired private EntityManager entityManager;
 
+    @GetMapping
+    public List<SeasonDTO> getAll() {
+        return repository.findAll().stream().map(SeasonDTO::convertToDTO).toList();
+    }
+
+    @GetMapping("/{id}")
+    public SeasonDTO getById(@PathVariable Long id) {
+        return repository.findById(id).map(SeasonDTO::convertToDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public SeasonDTO create(@RequestBody SeasonDTO dto) {
         Season entity = new Season(dto);
         if (dto.getShowId() != null) {
-            // Note: Use getShowsId() in the Entity to match your SQL 'shows_id'
             entity.setShow(entityManager.getReference(Show.class, dto.getShowId()));
         }
         return SeasonDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PatchMapping("/{id}")
+    public SeasonDTO patch(@PathVariable Long id, @RequestBody SeasonDTO dto) {
+        Season entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getTitle() != null) entity.setTitle(dto.getTitle());
+        if (dto.getReleasedate() != null) entity.setReleasedate(dto.getReleasedate());
+        return SeasonDTO.convertToDTO(repository.save(entity));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 }
