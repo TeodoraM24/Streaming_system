@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReviewDTO {
 
-    private Integer reviewId;
+    private Long reviewId;
     private String title;
     private Short rating;
     private String comment;

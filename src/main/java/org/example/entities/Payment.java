@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.PaymentDTO;
 import org.example.enums.PaymentStatus;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,7 +21,10 @@ public class Payment {
     @Column(name = "payment_id")
     private Long paymentId;
 
-    private Double price;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "currency", columnDefinition = "bpchar")
     private String currency;
 
     @Column(name = "created_at")
@@ -38,10 +42,12 @@ public class Payment {
     private PaymentMethod paymentMethod;
 
     public Payment(PaymentDTO dto) {
-        this.paymentId = dto.getPaymentId();
-        this.price = dto.getPrice();
-        this.currency = dto.getCurrency();
-        this.createdAt = dto.getCreatedAt();
-        this.status = dto.getStatus();
+        if (dto != null) {
+            this.paymentId = dto.getPaymentId();
+            this.price = dto.getPrice(); // Fixed: Direct assignment
+            this.currency = dto.getCurrency();
+            this.createdAt = dto.getCreatedAt();
+            this.status = dto.getStatus();
+        }
     }
 }

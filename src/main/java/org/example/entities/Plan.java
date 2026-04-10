@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.PlanDTO;
-
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -21,20 +21,26 @@ public class Plan {
 
     private String name;
     private String description;
-    private Double price;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "currency", columnDefinition = "bpchar")
     private String currency;
+
     private Boolean active;
 
     @OneToMany(mappedBy = "plan")
     private List<Subscription> subscriptions;
 
-    // Conversion Constructor
     public Plan(PlanDTO dto) {
-        this.planId = dto.getPlanId();
-        this.name = dto.getName();
-        this.description = dto.getDescription();
-        this.price = dto.getPrice();
-        this.currency = dto.getCurrency();
-        this.active = dto.getActive();
+        if (dto != null) {
+            this.planId = dto.getPlanId();
+            this.name = dto.getName();
+            this.description = dto.getDescription();
+            this.price = dto.getPrice(); // Fixed: Direct assignment
+            this.currency = dto.getCurrency();
+            this.active = dto.getActive();
+        }
     }
 }

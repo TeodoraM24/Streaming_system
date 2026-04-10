@@ -17,7 +17,7 @@ public class SeasonDTO {
     private Long seasonId;
     private String title;
     private LocalDate releasedate;
-    private Integer showId;
+    private Long showId;
 
     public static SeasonDTO convertToDTO(Season entity) {
         if (entity == null) return null;

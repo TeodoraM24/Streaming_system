@@ -21,7 +21,7 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer reviewId;
+    private Long reviewId;
 
     private String title;
     private Short rating;
@@ -37,11 +37,7 @@ public class Review {
     private Profile profile;
 
     @ManyToOne
-    @JoinColumn(
-            name = "content_content_id",
-            nullable = false,
-            columnDefinition = "INT"
-    )
+    @JoinColumn(name = "content_content_id")
     @JsonIgnore // Prevents loop back to Content
     private Content content;
 
