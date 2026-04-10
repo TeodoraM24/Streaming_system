@@ -41,11 +41,14 @@ public class PaymentMethod {
     private List<Payment> payments;
 
     public PaymentMethod(PaymentMethodDTO dto) {
-        this.paymentmethodId = dto.getPaymentmethodId();
-        this.cardNumber = dto.getCardNumber();
-        this.expirationMonth = dto.getExpirationMonth();
-        this.expirationYear = dto.getExpirationYear();
-        this.type = dto.getType();
-        this.defaultPaymentmethod = dto.getDefaultPaymentmethod();
+        if (dto != null) {
+            this.paymentmethodId = dto.getPaymentmethodId();
+            this.cardNumber = dto.getCardNumber();
+            this.expirationMonth = dto.getExpirationMonth();
+            this.expirationYear = dto.getExpirationYear();
+            this.cvc = dto.getCvc(); // RESTORED
+            this.type = dto.getType();
+            this.defaultPaymentmethod = dto.getDefaultPaymentmethod();
+        }
     }
 }

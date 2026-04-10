@@ -12,7 +12,7 @@ import org.example.entities.Show;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShowDTO {
 
-    private Integer showsId;
+    private Long showsId;
     private Long contentId;
 
     public static ShowDTO convertToDTO(Show entity) {

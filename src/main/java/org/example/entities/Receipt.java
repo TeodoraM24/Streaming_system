@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.ReceiptDTO;
-
+import java.math.BigDecimal; // Required for DECIMAL(10,2)
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,21 +17,27 @@ public class Receipt {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "receipt_id")
     private Long receiptId;
 
+    @Column(name = "receipt_number", unique = true)
     private String receiptNumber;
-    private Double price;
+
+    @Column(precision = 10, scale = 2)
+    private BigDecimal price; // BigDecimal fix
+
     private LocalDateTime paydate;
 
     @OneToOne
-    @JoinColumn(name = "payment_payment_id")
+    @JoinColumn(name = "payment_payment_id") // RESTORED
     private Payment payment;
 
-    // Conversion Constructor
     public Receipt(ReceiptDTO dto) {
-        this.receiptId = dto.getReceiptId();
-        this.receiptNumber = dto.getReceiptNumber();
-        this.price = dto.getPrice();
-        this.paydate = dto.getPaydate();
+        if (dto != null) {
+            this.receiptId = dto.getReceiptId();
+            this.receiptNumber = dto.getReceiptNumber();
+            this.price = dto.getPrice();
+            this.paydate = dto.getPaydate();
+        }
     }
 }

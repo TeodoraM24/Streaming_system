@@ -1,34 +1,31 @@
 package org.example.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.entities.Plan;
+import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlanDTO {
-
     private Long planId;
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price; // BigDecimal for SQL DECIMAL support
     private String currency;
     private Boolean active;
 
-    // Static mapping method
-    public static PlanDTO convertToDTO(Plan entity) {
-        if (entity == null) return null;
+    public static PlanDTO convertToDTO(Plan plan) {
+        if (plan == null) return null;
         return new PlanDTO(
-                entity.getPlanId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getPrice(),
-                entity.getCurrency(),
-                entity.getActive()
+                plan.getPlanId(),
+                plan.getName(),
+                plan.getDescription(),
+                plan.getPrice(),
+                plan.getCurrency(),
+                plan.getActive()
         );
     }
 }

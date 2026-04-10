@@ -1,33 +1,30 @@
 package org.example.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.entities.Receipt;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReceiptDTO {
-
     private Long receiptId;
     private String receiptNumber;
-    private Double price;
+    private BigDecimal price; // BigDecimal for SQL DECIMAL support
     private LocalDateTime paydate;
-    private Long paymentId;
+    private Long paymentId; // RESTORED: Links to Payment entity
 
-    public static ReceiptDTO convertToDTO(Receipt entity) {
-        if (entity == null) return null;
+    public static ReceiptDTO convertToDTO(Receipt receipt) {
+        if (receipt == null) return null;
         return new ReceiptDTO(
-                entity.getReceiptId(),
-                entity.getReceiptNumber(),
-                entity.getPrice(),
-                entity.getPaydate(),
-                entity.getPayment() != null ? entity.getPayment().getPaymentId() : null
+                receipt.getReceiptId(),
+                receipt.getReceiptNumber(),
+                receipt.getPrice(),
+                receipt.getPaydate(),
+                receipt.getPayment() != null ? receipt.getPayment().getPaymentId() : null
         );
     }
 }

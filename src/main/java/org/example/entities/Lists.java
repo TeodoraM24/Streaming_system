@@ -6,11 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.ListsDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "list")
+@Table(name = "lists") // Matches the 'lists' table name in your updated SQL
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,11 +30,8 @@ public class Lists {
     @ManyToMany
     @JoinTable(
             name = "content_has_list",
-            joinColumns = @JoinColumn(name = "list_list_id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "content_content_id",
-                    columnDefinition = "INT" // This tells Hibernate: "I know Java uses Long, but the DB is INT"
-            )
+            joinColumns = @JoinColumn(name = "lists_list_id"), // Matches SQL: lists_list_id
+            inverseJoinColumns = @JoinColumn(name = "content_content_id") // Matches SQL: content_content_id
     )
     private List<Content> contents;
 

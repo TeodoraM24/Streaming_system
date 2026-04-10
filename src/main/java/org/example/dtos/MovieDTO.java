@@ -12,7 +12,7 @@ import org.example.entities.Movie;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
 
-    private Integer movieId;
+    private Long movieId;
     private Short duration;
     private Long contentId;
 

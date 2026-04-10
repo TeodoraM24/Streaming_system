@@ -21,7 +21,7 @@ public class Content {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "content_id")
-    private Long contentId; // Keep as Long to match the main table's BIGSERIAL
+    private Long contentId;
 
     private String originaltitle;
     private String title;
@@ -38,16 +38,14 @@ public class Content {
     @Column(columnDefinition = "content_type")
     private ContentType type;
 
+    // This refers to the 'contents' field in the Lists entity which holds the @JoinTable
     @ManyToMany(mappedBy = "contents")
     private List<Lists> lists;
 
     @ManyToMany
     @JoinTable(
             name = "genre_has_content",
-            joinColumns = @JoinColumn(
-                    name = "content_content_id",
-                    columnDefinition = "INT" // FORCES Hibernate to accept the INT in the join table
-            ),
+            joinColumns = @JoinColumn(name = "content_content_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_genre_id")
     )
     private List<Genre> genres;
@@ -55,14 +53,12 @@ public class Content {
     @ManyToMany
     @JoinTable(
             name = "content_has_personnel",
-            joinColumns = @JoinColumn(
-                    name = "content_content_id",
-                    columnDefinition = "INT" // FORCES Hibernate to accept the INT in the join table
-            ),
+            joinColumns = @JoinColumn(name = "content_content_id"),
             inverseJoinColumns = @JoinColumn(name = "personnel_personnel_id")
     )
     private List<Personnel> personnel;
 
+    // Ensure the 'Review' entity has a field named 'content'
     @OneToMany(mappedBy = "content")
     private List<Review> reviews;
 

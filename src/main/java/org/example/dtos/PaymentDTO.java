@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.entities.Payment;
 import org.example.enums.PaymentStatus;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,11 +16,10 @@ import java.time.LocalDateTime;
 public class PaymentDTO {
 
     private Long paymentId;
-    private Double price;
+    private BigDecimal price; // BigDecimal for SQL DECIMAL support
     private String currency;
     private LocalDateTime createdAt;
     private PaymentStatus status;
-
     private Long subscriptionId;
     private Long paymentMethodId;
 
@@ -32,7 +32,6 @@ public class PaymentDTO {
                 payment.getCreatedAt(),
                 payment.getStatus(),
                 payment.getSubscription() != null ? payment.getSubscription().getSubscriptionId() : null,
-                // Fixed: Changed getPaymentMethodId() to getPaymentmethodId()
                 payment.getPaymentMethod() != null ? payment.getPaymentMethod().getPaymentmethodId() : null
         );
     }
