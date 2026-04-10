@@ -7,13 +7,15 @@ import org.example.entities.PaymentMethod;
 import org.example.entities.Subscription;
 import org.example.repositories.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
-
     @Autowired private PaymentRepository repository;
     @Autowired private EntityManager entityManager;
 
@@ -22,16 +24,32 @@ public class PaymentController {
         return repository.findAll().stream().map(PaymentDTO::convertToDTO).toList();
     }
 
+    @GetMapping("/{id}")
+    public PaymentDTO getById(@PathVariable Long id) {
+        return repository.findById(id).map(PaymentDTO::convertToDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public PaymentDTO create(@RequestBody PaymentDTO dto) {
         Payment entity = new Payment(dto);
-        // Link the FKs
-        if (dto.getSubscriptionId() != null) {
-            entity.setSubscription(entityManager.getReference(Subscription.class, dto.getSubscriptionId()));
-        }
-        if (dto.getPaymentMethodId() != null) {
-            entity.setPaymentMethod(entityManager.getReference(PaymentMethod.class, dto.getPaymentMethodId()));
-        }
+        if (dto.getSubscriptionId() != null) entity.setSubscription(entityManager.getReference(Subscription.class, dto.getSubscriptionId()));
+        if (dto.getPaymentMethodId() != null) entity.setPaymentMethod(entityManager.getReference(PaymentMethod.class, dto.getPaymentMethodId()));
         return PaymentDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PatchMapping("/{id}")
+    public PaymentDTO patch(@PathVariable Long id, @RequestBody PaymentDTO dto) {
+        Payment entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getStatus() != null) entity.setStatus(dto.getStatus());
+        if (dto.getPrice() != null) entity.setPrice(dto.getPrice());
+        return PaymentDTO.convertToDTO(repository.save(entity));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 }

@@ -6,7 +6,10 @@ import org.example.entities.Content;
 import org.example.entities.Movie;
 import org.example.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.List;
 
 @RestController
@@ -21,12 +24,35 @@ public class MovieController {
         return movieRepository.findAll().stream().map(MovieDTO::convertToDTO).toList();
     }
 
+    @GetMapping("/{id}")
+    public MovieDTO getById(@PathVariable Long id) {
+        return movieRepository.findById(id).map(MovieDTO::convertToDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public MovieDTO create(@RequestBody MovieDTO dto) {
         Movie movie = new Movie(dto);
         if (dto.getContentId() != null) {
             movie.setContent(entityManager.getReference(Content.class, dto.getContentId()));
         }
         return MovieDTO.convertToDTO(movieRepository.save(movie));
+    }
+
+    @PatchMapping("/{id}")
+    public MovieDTO patch(@PathVariable Long id, @RequestBody MovieDTO dto) {
+        Movie entity = movieRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getDuration() != null) entity.setDuration(dto.getDuration());
+        if (dto.getContentId() != null) {
+            entity.setContent(entityManager.getReference(Content.class, dto.getContentId()));
+        }
+        return MovieDTO.convertToDTO(movieRepository.save(entity));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        movieRepository.deleteById(id);
     }
 }
