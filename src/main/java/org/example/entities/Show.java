@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.ShowDTO;
+
 import java.util.List;
 
 @Entity
@@ -19,11 +20,11 @@ public class Show {
     @Column(name = "shows_id")
     private Long showsId;
 
-    @OneToOne
-    @JoinColumn(name = "content_content_id")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "content_content_id", nullable = false)
     private Content content;
 
-    @OneToMany(mappedBy = "show")
+    @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Season> seasons;
 
     public Show(ShowDTO dto) {

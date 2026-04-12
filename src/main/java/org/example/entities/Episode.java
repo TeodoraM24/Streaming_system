@@ -17,6 +17,7 @@ public class Episode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "episode_id")
     private Long episodeId;
 
     private String title;
@@ -31,7 +32,6 @@ public class Episode {
     @JoinColumn(name = "season_season_id")
     private Season season;
 
-    // Conversion Constructor
     public Episode(EpisodeDTO dto) {
         this.episodeId = dto.getEpisodeId();
         this.title = dto.getTitle();

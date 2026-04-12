@@ -17,7 +17,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContentDTO {
 
-    private Long contentId; // Changed to Long
+    private Long contentId;
     private String originaltitle;
     private String title;
     private String description;
@@ -32,19 +32,13 @@ public class ContentDTO {
     public static ContentDTO convertToDTO(Content content) {
         if (content == null) return null;
 
-        List<Long> genreIds = null;
-        if (content.getGenres() != null) {
-            genreIds = content.getGenres().stream()
-                    .map(g -> g.getGenreId())
-                    .toList();
-        }
+        List<Long> genreIds = content.getGenres() != null
+                ? content.getGenres().stream().map(g -> g.getGenreId()).toList()
+                : null;
 
-        List<Long> personnelIds = null;
-        if (content.getPersonnel() != null) {
-            personnelIds = content.getPersonnel().stream()
-                    .map(p -> p.getPersonnelId())
-                    .toList();
-        }
+        List<Long> personnelIds = content.getPersonnel() != null
+                ? content.getPersonnel().stream().map(p -> p.getPersonnelId()).toList()
+                : null;
 
         return new ContentDTO(
                 content.getContentId(),

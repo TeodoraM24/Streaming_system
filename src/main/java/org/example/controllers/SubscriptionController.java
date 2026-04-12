@@ -35,18 +35,46 @@ public class SubscriptionController {
     @ResponseStatus(HttpStatus.CREATED)
     public SubscriptionDTO create(@RequestBody SubscriptionDTO dto) {
         Subscription entity = new Subscription(dto);
-        if (dto.getAccountId() != null) entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
-        if (dto.getPlanId() != null) entity.setPlan(entityManager.getReference(Plan.class, dto.getPlanId()));
+        if (dto.getAccountId() != null) {
+            entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
+        }
+        if (dto.getPlanId() != null) {
+            entity.setPlan(entityManager.getReference(Plan.class, dto.getPlanId()));
+        }
         return SubscriptionDTO.convertToDTO(repository.save(entity));
     }
 
     @PutMapping("/{id}")
     public SubscriptionDTO update(@PathVariable Long id, @RequestBody SubscriptionDTO dto) {
-        Subscription entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Subscription entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         entity.setStartdate(dto.getStartdate());
         entity.setEnddate(dto.getEnddate());
         entity.setNextBillDate(dto.getNextBillDate());
         entity.setStatus(dto.getStatus());
+        if (dto.getAccountId() != null) {
+            entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
+        }
+        if (dto.getPlanId() != null) {
+            entity.setPlan(entityManager.getReference(Plan.class, dto.getPlanId()));
+        }
+        return SubscriptionDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PatchMapping("/{id}")
+    public SubscriptionDTO patch(@PathVariable Long id, @RequestBody SubscriptionDTO dto) {
+        Subscription entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getStartdate() != null) entity.setStartdate(dto.getStartdate());
+        if (dto.getEnddate() != null) entity.setEnddate(dto.getEnddate());
+        if (dto.getNextBillDate() != null) entity.setNextBillDate(dto.getNextBillDate());
+        if (dto.getStatus() != null) entity.setStatus(dto.getStatus());
+        if (dto.getAccountId() != null) {
+            entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
+        }
+        if (dto.getPlanId() != null) {
+            entity.setPlan(entityManager.getReference(Plan.class, dto.getPlanId()));
+        }
         return SubscriptionDTO.convertToDTO(repository.save(entity));
     }
 

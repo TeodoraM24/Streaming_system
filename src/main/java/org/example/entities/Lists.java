@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.ListsDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,7 @@ public class Lists {
             joinColumns = @JoinColumn(name = "lists_list_id"), // Matches SQL: lists_list_id
             inverseJoinColumns = @JoinColumn(name = "content_content_id") // Matches SQL: content_content_id
     )
-    private List<Content> contents;
+    private List<Content> contents = new ArrayList<>();
 
     // Conversion Constructor
     public Lists(ListsDTO dto) {

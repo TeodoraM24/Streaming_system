@@ -1,15 +1,18 @@
 package org.example.entities;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.ContentDTO;
 import org.example.enums.ContentType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "content")
@@ -23,7 +26,9 @@ public class Content {
     @Column(name = "content_id")
     private Long contentId;
 
+    @Column(nullable = false)
     private String originaltitle;
+
     private String title;
 
     @Column(columnDefinition = "TEXT")
@@ -32,13 +37,14 @@ public class Content {
     private BigDecimal rating;
 
     private LocalDate releasedate;
+
     private String thumbnail;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "content_type")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(nullable = false, columnDefinition = "content_type")
     private ContentType type;
 
-    // This refers to the 'contents' field in the Lists entity which holds the @JoinTable
     @ManyToMany(mappedBy = "contents")
     private List<Lists> lists;
 
@@ -48,7 +54,7 @@ public class Content {
             joinColumns = @JoinColumn(name = "content_content_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_genre_id")
     )
-    private List<Genre> genres;
+    private List<Genre> genres = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -56,14 +62,12 @@ public class Content {
             joinColumns = @JoinColumn(name = "content_content_id"),
             inverseJoinColumns = @JoinColumn(name = "personnel_personnel_id")
     )
-    private List<Personnel> personnel;
+    private List<Personnel> personnel = new ArrayList<>();
 
-    // Ensure the 'Review' entity has a field named 'content'
-    @OneToMany(mappedBy = "content")
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
     public Content(ContentDTO dto) {
-        this.contentId = dto.getContentId();
         this.originaltitle = dto.getOriginaltitle();
         this.title = dto.getTitle();
         this.description = dto.getDescription();

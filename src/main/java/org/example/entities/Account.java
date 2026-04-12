@@ -18,7 +18,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "account_id") // Matches BIGSERIAL account_id in SQL
+    @Column(name = "account_id")
     private Long accountId;
 
     private String firstname;
@@ -28,19 +28,18 @@ public class Account {
     @Column(unique = true, nullable = false)
     private String mail;
 
-    @OneToMany(mappedBy = "account")
-    @JsonIgnore // Stops: Account -> User -> Account loop
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<User> users;
 
-    @OneToMany(mappedBy = "account")
-    @JsonIgnore // Stops: Account -> Profile -> Account loop
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Profile> profiles;
 
-    @OneToMany(mappedBy = "account")
-    @JsonIgnore // Stops: Account -> Subscription -> Account loop
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Subscription> subscriptions;
 
-    // Constructor for creating/updating from DTO
     public Account(AccountDTO dto) {
         if (dto != null) {
             this.accountId = dto.getAccountId();

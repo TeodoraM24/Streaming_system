@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/receipts")
 public class ReceiptController {
+
     @Autowired private ReceiptRepository repository;
     @Autowired private EntityManager entityManager;
 
@@ -33,6 +34,32 @@ public class ReceiptController {
     @ResponseStatus(HttpStatus.CREATED)
     public ReceiptDTO create(@RequestBody ReceiptDTO dto) {
         Receipt entity = new Receipt(dto);
+        if (dto.getPaymentId() != null) {
+            entity.setPayment(entityManager.getReference(Payment.class, dto.getPaymentId()));
+        }
+        return ReceiptDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PutMapping("/{id}")
+    public ReceiptDTO update(@PathVariable Long id, @RequestBody ReceiptDTO dto) {
+        Receipt entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        entity.setReceiptNumber(dto.getReceiptNumber());
+        entity.setPrice(dto.getPrice());
+        entity.setPaydate(dto.getPaydate());
+        if (dto.getPaymentId() != null) {
+            entity.setPayment(entityManager.getReference(Payment.class, dto.getPaymentId()));
+        }
+        return ReceiptDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PatchMapping("/{id}")
+    public ReceiptDTO patch(@PathVariable Long id, @RequestBody ReceiptDTO dto) {
+        Receipt entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getReceiptNumber() != null) entity.setReceiptNumber(dto.getReceiptNumber());
+        if (dto.getPrice() != null) entity.setPrice(dto.getPrice());
+        if (dto.getPaydate() != null) entity.setPaydate(dto.getPaydate());
         if (dto.getPaymentId() != null) {
             entity.setPayment(entityManager.getReference(Payment.class, dto.getPaymentId()));
         }

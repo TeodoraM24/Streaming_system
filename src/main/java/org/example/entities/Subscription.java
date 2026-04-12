@@ -3,11 +3,14 @@ package org.example.entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.SubscriptionDTO;
 import org.example.enums.SubscriptionStatus;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "subscription")
@@ -28,6 +31,8 @@ public class Subscription {
     private LocalDate nextBillDate;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(columnDefinition = "subscription_status")
     private SubscriptionStatus status;
 
     @ManyToOne

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.ProfileDTO;
+
 import java.util.List;
 
 @Entity
@@ -17,19 +18,20 @@ public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "profile_id")
     private Long profileId;
 
     private String profilename;
 
     @ManyToOne
     @JoinColumn(name = "accounts_account_id")
-    @JsonIgnore // Prevents loop back to Account
+    @JsonIgnore
     private Account account;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lists> lists;
 
-    @OneToMany(mappedBy = "profile")
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
     public Profile(ProfileDTO dto) {
