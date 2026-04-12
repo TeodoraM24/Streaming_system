@@ -15,12 +15,13 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "movie_id")
     private Long movieId;
 
     private Short duration;
 
-    @OneToOne
-    @JoinColumn(name = "content_content_id")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "content_content_id", nullable = false)
     private Content content;
 
     public Movie(MovieDTO dto) {

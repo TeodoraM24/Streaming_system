@@ -17,9 +17,10 @@ public class PaymentMethodDTO {
     private String cardNumber;
     private Short expirationMonth;
     private Short expirationYear;
-    private String cvc; // RESTORED
+    private String cvc;
     private PaymentType type;
     private Boolean defaultPaymentmethod;
+    private Long accountId;
 
     public static PaymentMethodDTO convertToDTO(PaymentMethod entity) {
         if (entity == null) return null;
@@ -30,7 +31,8 @@ public class PaymentMethodDTO {
                 entity.getExpirationYear(),
                 entity.getCvc(),
                 entity.getType(),
-                entity.getDefaultPaymentmethod()
+                entity.getDefaultPaymentmethod(),
+                entity.getAccount() != null ? entity.getAccount().getAccountId() : null
         );
     }
 }

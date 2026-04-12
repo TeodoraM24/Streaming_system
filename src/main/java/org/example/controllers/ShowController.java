@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/shows")
 public class ShowController {
+
     @Autowired private ShowRepository repository;
     @Autowired private EntityManager entityManager;
 
@@ -37,6 +38,26 @@ public class ShowController {
             show.setContent(entityManager.getReference(Content.class, dto.getContentId()));
         }
         return ShowDTO.convertToDTO(repository.save(show));
+    }
+
+    @PutMapping("/{id}")
+    public ShowDTO update(@PathVariable Long id, @RequestBody ShowDTO dto) {
+        Show entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getContentId() != null) {
+            entity.setContent(entityManager.getReference(Content.class, dto.getContentId()));
+        }
+        return ShowDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PatchMapping("/{id}")
+    public ShowDTO patch(@PathVariable Long id, @RequestBody ShowDTO dto) {
+        Show entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getContentId() != null) {
+            entity.setContent(entityManager.getReference(Content.class, dto.getContentId()));
+        }
+        return ShowDTO.convertToDTO(repository.save(entity));
     }
 
     @DeleteMapping("/{id}")

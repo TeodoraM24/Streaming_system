@@ -1,12 +1,16 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.PaymentMethodDTO;
 import org.example.enums.PaymentType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.List;
 
 @Entity
 @Table(name = "paymentmethod")
@@ -32,12 +36,19 @@ public class PaymentMethod {
     private String cvc;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(columnDefinition = "payment_type")
     private PaymentType type;
 
     @Column(name = "default_paymentmethod")
     private Boolean defaultPaymentmethod;
 
-    @OneToMany(mappedBy = "paymentMethod")
+    @ManyToOne
+    @JoinColumn(name = "accounts_account_id")
+    @JsonIgnore
+    private Account account;
+
+    @OneToMany(mappedBy = "paymentMethod", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payments;
 
     public PaymentMethod(PaymentMethodDTO dto) {
@@ -46,7 +57,7 @@ public class PaymentMethod {
             this.cardNumber = dto.getCardNumber();
             this.expirationMonth = dto.getExpirationMonth();
             this.expirationYear = dto.getExpirationYear();
-            this.cvc = dto.getCvc(); // RESTORED
+            this.cvc = dto.getCvc();
             this.type = dto.getType();
             this.defaultPaymentmethod = dto.getDefaultPaymentmethod();
         }

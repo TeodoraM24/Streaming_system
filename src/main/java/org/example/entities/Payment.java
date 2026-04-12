@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.PaymentDTO;
 import org.example.enums.PaymentStatus;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -31,6 +34,8 @@ public class Payment {
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(columnDefinition = "payment_status")
     private PaymentStatus status;
 
     @ManyToOne
@@ -44,7 +49,7 @@ public class Payment {
     public Payment(PaymentDTO dto) {
         if (dto != null) {
             this.paymentId = dto.getPaymentId();
-            this.price = dto.getPrice(); // Fixed: Direct assignment
+            this.price = dto.getPrice();
             this.currency = dto.getCurrency();
             this.createdAt = dto.getCreatedAt();
             this.status = dto.getStatus();

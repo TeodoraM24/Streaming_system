@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/reviews")
 public class ReviewController {
+
     @Autowired private ReviewRepository repository;
     @Autowired private EntityManager entityManager;
 
@@ -33,18 +34,35 @@ public class ReviewController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReviewDTO create(@RequestBody ReviewDTO dto) {
-        Review review = new Review(dto);
-        if (dto.getProfileId() != null) review.setProfile(entityManager.getReference(Profile.class, dto.getProfileId()));
-        if (dto.getContentId() != null) review.setContent(entityManager.getReference(Content.class, dto.getContentId()));
-        return ReviewDTO.convertToDTO(repository.save(review));
+        Review entity = new Review(dto);
+        if (dto.getProfileId() != null) {
+            entity.setProfile(entityManager.getReference(Profile.class, dto.getProfileId()));
+        }
+        if (dto.getContentId() != null) {
+            entity.setContent(entityManager.getReference(Content.class, dto.getContentId()));
+        }
+        return ReviewDTO.convertToDTO(repository.save(entity));
     }
 
     @PutMapping("/{id}")
     public ReviewDTO update(@PathVariable Long id, @RequestBody ReviewDTO dto) {
-        Review entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Review entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         entity.setTitle(dto.getTitle());
         entity.setRating(dto.getRating());
         entity.setComment(dto.getComment());
+        entity.setCreatedAt(dto.getCreatedAt());
+        return ReviewDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PatchMapping("/{id}")
+    public ReviewDTO patch(@PathVariable Long id, @RequestBody ReviewDTO dto) {
+        Review entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getTitle() != null) entity.setTitle(dto.getTitle());
+        if (dto.getRating() != null) entity.setRating(dto.getRating());
+        if (dto.getComment() != null) entity.setComment(dto.getComment());
+        if (dto.getCreatedAt() != null) entity.setCreatedAt(dto.getCreatedAt());
         return ReviewDTO.convertToDTO(repository.save(entity));
     }
 

@@ -18,16 +18,16 @@ public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "genre_id")
     private Long genreId;
 
     private String genrename;
 
     @ManyToMany(mappedBy = "genres")
-    @JsonIgnore // Prevents infinite loop: Genre -> Content -> Genre...
+    @JsonIgnore
     private List<Content> contents;
 
     public Genre(GenreDTO dto) {
-        this.genreId = dto.getGenreId(); // Fixed: was getAccountId()
         this.genrename = dto.getGenrename();
     }
 }

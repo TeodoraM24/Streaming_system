@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/episodes")
 public class EpisodeController {
+
     @Autowired private EpisodeRepository repository;
     @Autowired private EntityManager entityManager;
 
@@ -41,11 +42,29 @@ public class EpisodeController {
 
     @PutMapping("/{id}")
     public EpisodeDTO update(@PathVariable Long id, @RequestBody EpisodeDTO dto) {
-        Episode entity = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Episode entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());
         entity.setReleasedate(dto.getReleasedate());
         entity.setDuration(dto.getDuration());
+        if (dto.getSeasonId() != null) {
+            entity.setSeason(entityManager.getReference(Season.class, dto.getSeasonId()));
+        }
+        return EpisodeDTO.convertToDTO(repository.save(entity));
+    }
+
+    @PatchMapping("/{id}")
+    public EpisodeDTO patch(@PathVariable Long id, @RequestBody EpisodeDTO dto) {
+        Episode entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if (dto.getTitle() != null) entity.setTitle(dto.getTitle());
+        if (dto.getDescription() != null) entity.setDescription(dto.getDescription());
+        if (dto.getReleasedate() != null) entity.setReleasedate(dto.getReleasedate());
+        if (dto.getDuration() != null) entity.setDuration(dto.getDuration());
+        if (dto.getSeasonId() != null) {
+            entity.setSeason(entityManager.getReference(Season.class, dto.getSeasonId()));
+        }
         return EpisodeDTO.convertToDTO(repository.save(entity));
     }
 
