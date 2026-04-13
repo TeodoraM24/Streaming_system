@@ -30,15 +30,6 @@ public class MovieController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public MovieDTO create(@RequestBody MovieDTO dto) {
-        Movie movie = new Movie(dto);
-        if (dto.getContentId() != null) {
-            movie.setContent(entityManager.getReference(Content.class, dto.getContentId()));
-        }
-        return MovieDTO.convertToDTO(movieRepository.save(movie));
-    }
 
     @PatchMapping("/{id}")
     public MovieDTO patch(@PathVariable Long id, @RequestBody MovieDTO dto) {

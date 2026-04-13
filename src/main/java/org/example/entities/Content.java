@@ -67,6 +67,12 @@ public class Content {
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
 
+    @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
+    private Movie movie;
+
+    @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
+    private Show show;
+
     public Content(ContentDTO dto) {
         this.originaltitle = dto.getOriginaltitle();
         this.title = dto.getTitle();

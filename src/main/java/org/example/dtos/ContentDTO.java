@@ -28,6 +28,7 @@ public class ContentDTO {
 
     private List<Long> genreIds;
     private List<Long> personnelIds;
+    private Short duration;
 
     public static ContentDTO convertToDTO(Content content) {
         if (content == null) return null;
@@ -40,6 +41,12 @@ public class ContentDTO {
                 ? content.getPersonnel().stream().map(p -> p.getPersonnelId()).toList()
                 : null;
 
+        // ✅ FIX: get duration from Movie relation
+        Short duration = null;
+        if (content.getMovie() != null) {
+            duration = content.getMovie().getDuration();
+        }
+
         return new ContentDTO(
                 content.getContentId(),
                 content.getOriginaltitle(),
@@ -50,7 +57,8 @@ public class ContentDTO {
                 content.getThumbnail(),
                 content.getType(),
                 genreIds,
-                personnelIds
+                personnelIds,
+                duration
         );
     }
 }

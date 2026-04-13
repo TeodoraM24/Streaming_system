@@ -27,6 +27,7 @@ public class Show {
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Season> seasons;
 
+
     public Show(ShowDTO dto) {
         this.showsId = dto.getShowsId();
     }
