@@ -4,8 +4,12 @@ import jakarta.persistence.EntityManager;
 import org.example.dtos.ContentDTO;
 import org.example.entities.Content;
 import org.example.entities.Genre;
+import org.example.entities.Movie;
 import org.example.entities.Personnel;
+import org.example.entities.Show;
 import org.example.repositories.ContentRepository;
+import org.example.repositories.MovieRepository;
+import org.example.repositories.ShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +17,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/content")
 public class ContentController {
 
-    @Autowired
-    private ContentRepository contentRepository;
-
-    @Autowired
-    private EntityManager entityManager;
+    @Autowired private ContentRepository contentRepository;
+    @Autowired private MovieRepository movieRepository;
+    @Autowired private ShowRepository showRepository;
+    @Autowired private EntityManager entityManager;
 
     @GetMapping
     public List<ContentDTO> getAll() {
@@ -45,7 +49,28 @@ public class ContentController {
         Content entity = new Content(dto);
         entity = contentRepository.save(entity);
         setRelations(entity, dto);
-        return ContentDTO.convertToDTO(contentRepository.save(entity));
+        entity = contentRepository.save(entity);
+
+        // Auto-create the movie or show record based on type
+        switch (entity.getType()) {
+            case MOVIE -> {
+                Movie movie = new Movie();
+                movie.setContent(entity);
+                movie.setDuration(dto.getDuration());
+                movieRepository.save(movie);
+                entity.setMovie(movie);
+
+            }
+            case SHOW -> {
+                Show show = new Show();
+                show.setContent(entity);
+                showRepository.save(show);
+                entity.setShow(show);
+
+            }
+        }
+
+        return ContentDTO.convertToDTO(entity);
     }
 
     @PutMapping("/{id}")
@@ -91,14 +116,14 @@ public class ContentController {
             entity.setGenres(
                     dto.getGenreIds().stream()
                             .map(id -> entityManager.getReference(Genre.class, id))
-                            .collect(java.util.stream.Collectors.toCollection(ArrayList::new))
+                            .collect(Collectors.toCollection(ArrayList::new))
             );
         }
         if (dto.getPersonnelIds() != null) {
             entity.setPersonnel(
                     dto.getPersonnelIds().stream()
                             .map(id -> entityManager.getReference(Personnel.class, id))
-                            .collect(java.util.stream.Collectors.toCollection(ArrayList::new))
+                            .collect(Collectors.toCollection(ArrayList::new))
             );
         }
     }
@@ -108,14 +133,14 @@ public class ContentController {
             entity.setGenres(
                     dto.getGenreIds().stream()
                             .map(id -> entityManager.getReference(Genre.class, id))
-                            .collect(java.util.stream.Collectors.toCollection(ArrayList::new))
+                            .collect(Collectors.toCollection(ArrayList::new))
             );
         }
         if (dto.getPersonnelIds() != null) {
             entity.setPersonnel(
                     dto.getPersonnelIds().stream()
                             .map(id -> entityManager.getReference(Personnel.class, id))
-                            .collect(java.util.stream.Collectors.toCollection(ArrayList::new))
+                            .collect(Collectors.toCollection(ArrayList::new))
             );
         }
     }
