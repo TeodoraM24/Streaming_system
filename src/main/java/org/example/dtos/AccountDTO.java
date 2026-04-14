@@ -18,10 +18,6 @@ public class AccountDTO {
     private String phonenumber;
     private String mail;
 
-    /**
-     * Converts an Account Entity to an AccountDTO.
-     * This avoids serializing nested lists which prevents infinite loops.
-     */
     public static AccountDTO convertToDTO(Account account) {
         if (account == null) {
             return null;

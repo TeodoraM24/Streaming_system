@@ -82,7 +82,6 @@ public class AccountController {
         return AccountDTO.convertToDTO(accountRepository.save(existing));
     }
 
-    // ✅ DELETE
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {

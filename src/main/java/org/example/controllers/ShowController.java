@@ -30,16 +30,6 @@ public class ShowController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ShowDTO create(@RequestBody ShowDTO dto) {
-        Show show = new Show(dto);
-        if (dto.getContentId() != null) {
-            show.setContent(entityManager.getReference(Content.class, dto.getContentId()));
-        }
-        return ShowDTO.convertToDTO(repository.save(show));
-    }
-
     @PutMapping("/{id}")
     public ShowDTO update(@PathVariable Long id, @RequestBody ShowDTO dto) {
         Show entity = repository.findById(id)
