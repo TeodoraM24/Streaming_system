@@ -13,7 +13,7 @@ public class PlanDTO {
     private Long planId;
     private String name;
     private String description;
-    private BigDecimal price; // BigDecimal for SQL DECIMAL support
+    private BigDecimal price;
     private String currency;
     private Boolean active;
 

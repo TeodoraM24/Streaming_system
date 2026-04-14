@@ -25,7 +25,6 @@ public class SeasonDTO {
                 entity.getSeasonId(),
                 entity.getTitle(),
                 entity.getReleasedate(),
-                // Changed from getShowId() to getShowsId()
                 entity.getShow() != null ? entity.getShow().getShowsId() : null
         );
     }
