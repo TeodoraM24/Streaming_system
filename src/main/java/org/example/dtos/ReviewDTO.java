@@ -19,7 +19,6 @@ public class ReviewDTO {
     private Short rating;
     private String comment;
     private LocalDateTime createdAt;
-
     private Long profileId;
     private Long contentId;
 

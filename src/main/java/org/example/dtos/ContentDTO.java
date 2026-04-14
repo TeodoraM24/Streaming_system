@@ -41,7 +41,6 @@ public class ContentDTO {
                 ? content.getPersonnel().stream().map(p -> p.getPersonnelId()).toList()
                 : null;
 
-        // ✅ FIX: get duration from Movie relation
         Short duration = null;
         if (content.getMovie() != null) {
             duration = content.getMovie().getDuration();
