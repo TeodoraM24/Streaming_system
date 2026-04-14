@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class PaymentDTO {
 
     private Long paymentId;
-    private BigDecimal price; // BigDecimal for SQL DECIMAL support
+    private BigDecimal price;
     private String currency;
     private LocalDateTime createdAt;
     private PaymentStatus status;

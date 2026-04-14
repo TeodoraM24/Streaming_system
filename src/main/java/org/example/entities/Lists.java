@@ -36,7 +36,6 @@ public class Lists {
     )
     private List<Content> contents = new ArrayList<>();
 
-    // Conversion Constructor
     public Lists(ListsDTO dto) {
         this.listId = dto.getListId();
         this.listname = dto.getListname();

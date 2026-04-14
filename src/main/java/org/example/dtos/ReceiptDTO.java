@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 public class ReceiptDTO {
     private Long receiptId;
     private String receiptNumber;
-    private BigDecimal price; // BigDecimal for SQL DECIMAL support
+    private BigDecimal price;
     private LocalDateTime paydate;
-    private Long paymentId; // RESTORED: Links to Payment entity
+    private Long paymentId;
 
     public static ReceiptDTO convertToDTO(Receipt receipt) {
         if (receipt == null) return null;

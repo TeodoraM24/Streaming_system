@@ -17,7 +17,6 @@ public class PersonnelDTO {
     private String name;
     private PersonnelRole roletype;
 
-    // Static mapping method
     public static PersonnelDTO convertToDTO(Personnel entity) {
         if (entity == null) return null;
         return new PersonnelDTO(
