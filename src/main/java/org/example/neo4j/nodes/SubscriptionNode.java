@@ -7,22 +7,24 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@Node("Review")
+@Node("Subscription")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewNode {
+public class SubscriptionNode {
 
     @Id
     private Long id;
 
-    private String title;
-    private Short rating;
-    private String comment;
-    private LocalDateTime createdAt;
+    private LocalDate startdate;
+    private LocalDate enddate;
+    private String status;
 
-    @Relationship(type = "REVIEWS")
-    private ContentNode content;
+    @Relationship(type = "HAS_PLAN")
+    private PlanNode plan;
+
+    @Relationship(type = "HAS_PAYMENT")
+    private PaymentNode payment;
 }

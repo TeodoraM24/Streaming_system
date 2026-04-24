@@ -5,22 +5,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigDecimal;
 
-@Node("User")
+@Node("Plan")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserNode {
+public class PlanNode {
 
     @Id
     private Long id;
 
-    private String username;
-
-    @Relationship(type = "HAS_PROFILE")
-    private Set<ProfileNode> profiles = new HashSet<>();
+    private String name;
+    private BigDecimal price;
+    private String description;
 }

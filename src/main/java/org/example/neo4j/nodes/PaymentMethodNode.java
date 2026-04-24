@@ -5,22 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
-import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.HashSet;
-import java.util.Set;
-
-@Node("User")
+@Node("PaymentMethod")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserNode {
+public class PaymentMethodNode {
 
     @Id
     private Long id;
 
-    private String username;
-
-    @Relationship(type = "HAS_PROFILE")
-    private Set<ProfileNode> profiles = new HashSet<>();
+    private String methodname;
 }

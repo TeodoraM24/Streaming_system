@@ -20,6 +20,8 @@ public class ProfileNode {
     private Long id;
 
     private String profilename;
+    @Relationship(type = "HAS_LIST")
+    private Set<ListsNode> lists = new HashSet<>();
 
     @Relationship(type = "WROTE")
     private Set<ReviewNode> reviews = new HashSet<>();

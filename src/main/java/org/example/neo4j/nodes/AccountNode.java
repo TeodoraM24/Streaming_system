@@ -7,22 +7,24 @@ import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
-@Node("Review")
+@Node("Account")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewNode {
+public class AccountNode {
 
     @Id
     private Long id;
 
-    private String title;
-    private Short rating;
-    private String comment;
-    private LocalDateTime createdAt;
+    private String email;
+    private String password;
 
-    @Relationship(type = "REVIEWS")
-    private ContentNode content;
+    @Relationship(type = "HAS_USER")
+    private Set<UserNode> users = new HashSet<>();
+
+    @Relationship(type = "HAS_SUBSCRIPTION")
+    private Set<SubscriptionNode> subscriptions = new HashSet<>();
 }

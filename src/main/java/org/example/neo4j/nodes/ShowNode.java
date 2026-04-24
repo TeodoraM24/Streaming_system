@@ -35,4 +35,7 @@ public class ShowNode {
 
     @Relationship(type = "HAS_PERSONNEL")
     private Set<PersonnelNode> personnel = new HashSet<>();
+
+    @Relationship(type = "HAS_SEASON")
+    private Set<SeasonNode> seasons = new HashSet<>();
 }
