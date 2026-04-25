@@ -12,8 +12,8 @@ public class MigrationRunnerConfig {
 
     private final MigrationService migrationService;
 
-    @Bean
-    public CommandLineRunner runMigration() {
-        return args -> migrationService.migrateAll();
-    }
+//    @Bean
+//    public CommandLineRunner runMigration() {
+//        return args -> migrationService.migrateAll();
+//    }
 }
