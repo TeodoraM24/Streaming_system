@@ -13,7 +13,7 @@ public class MongoMigrationRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        mongoMigrationService.migrateAll();
-        System.out.println("MongoDB migration finished");
+//        mongoMigrationService.migrateAll();
+//        System.out.println("MongoDB migration finished");
     }
 }
