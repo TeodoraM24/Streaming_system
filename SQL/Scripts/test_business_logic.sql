@@ -1,7 +1,7 @@
 -- =========================================================
 -- TEST SCRIPT FOR STREAMING BUSINESS LOGIC
 -- Run after:
--- 1. streaming_schema.sql
+-- 1. streamingsystem-create-db.sql
 -- 2. streaming-system-v2-postgres-seed-fixed.sql
 -- 3. streaming_business_logic.sql
 -- =========================================================
