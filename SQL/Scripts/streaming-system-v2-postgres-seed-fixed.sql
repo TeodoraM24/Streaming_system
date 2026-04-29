@@ -41,9 +41,9 @@ INSERT INTO subscription (subscription_id, startdate, enddate, next_bill_date, s
 (1, CURRENT_DATE - 20, CURRENT_DATE + 10, CURRENT_DATE + 10, 'ACTIVE', 1, 1),
 (2, CURRENT_DATE - 60, CURRENT_DATE - 10, CURRENT_DATE - 10, 'EXPIRED', 1, 1);
 
-INSERT INTO paymentmethod (paymentmethod_id, card_number, expiration_month, expiration_year, cvc, type, default_paymentmethod) VALUES
-(1, '4242 4242 4242 4242', 12, 2030, '123', 'CARD', TRUE),
-(2, NULL, NULL, NULL, NULL, 'MOBILEPAY', FALSE);
+INSERT INTO paymentmethod (paymentmethod_id, card_number, expiration_month, expiration_year, cvc, type, default_paymentmethod, accounts_account_id) VALUES
+(1, '4242 4242 4242 4242', 12, 2030, '123', 'CARD', TRUE, 1),
+(2, NULL, NULL, NULL, NULL, 'MOBILEPAY', FALSE, 1);
 
 INSERT INTO payment (payment_id, price, currency, created_at, status, subscription_subscription_id, paymentmethod_paymentmethod_id) VALUES
 (1, 99.00, 'DKK', NOW() - INTERVAL '20 days', 'PAID', 1, 1),
@@ -5171,9 +5171,9 @@ INSERT INTO content_has_personnel (content_content_id, personnel_personnel_id) V
 -- CONTENT_HAS_LIST (put some content into lists)
 -- =========================================================
 
-INSERT INTO content_has_list (content_content_id, list_list_id)
+INSERT INTO content_has_list (content_content_id, lists_list_id)
 SELECT c.content_id, l.list_id
-FROM list l
+FROM lists l
 JOIN LATERAL (
   SELECT content_id FROM content ORDER BY random() LIMIT 30
 ) c ON true
@@ -5186,7 +5186,7 @@ ON CONFLICT DO NOTHING;
 INSERT INTO review (title, rating, comment, created_at, profile_profile_id, content_content_id)
 SELECT
   (ARRAY['Amazing','Good','Okay','Not great','Masterpiece'])[1+(random()*4)::int],
-  (1 + (random()*9)::int)::smallint,
+  (1 + (random()*4)::int)::smallint,
   (ARRAY[
     'Really enjoyed it.',
     'Pretty solid overall.',
@@ -5209,7 +5209,7 @@ JOIN LATERAL (
 SELECT setval(pg_get_serial_sequence('accounts','account_id'), (SELECT COALESCE(MAX(account_id),1) FROM accounts));
 SELECT setval(pg_get_serial_sequence('users','users_id'), (SELECT COALESCE(MAX(users_id),1) FROM users));
 SELECT setval(pg_get_serial_sequence('profile','profile_id'), (SELECT COALESCE(MAX(profile_id),1) FROM profile));
-SELECT setval(pg_get_serial_sequence('list','list_id'), (SELECT COALESCE(MAX(list_id),1) FROM list));
+SELECT setval(pg_get_serial_sequence('lists','list_id'), (SELECT COALESCE(MAX(list_id),1) FROM lists));
 SELECT setval(pg_get_serial_sequence('content','content_id'), (SELECT COALESCE(MAX(content_id),1) FROM content));
 SELECT setval(pg_get_serial_sequence('movie','movie_id'), (SELECT COALESCE(MAX(movie_id),1) FROM movie));
 SELECT setval(pg_get_serial_sequence('shows','shows_id'), (SELECT COALESCE(MAX(shows_id),1) FROM shows));
