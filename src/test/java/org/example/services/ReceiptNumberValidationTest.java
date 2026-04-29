@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ReceiptValidationTest {
+class ReceiptNumberValidationTest {
 
     private final ReceiptValidation validator = new ReceiptValidation();
 
