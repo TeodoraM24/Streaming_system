@@ -44,7 +44,7 @@ public class ReceiptValidation {
         }
 
         if (price.compareTo(MAX_PRICE) > 0) {
-            throw new IllegalArgumentException("Price must be no more than 999.00");
+            throw new IllegalArgumentException("Price must be no more than 999.99");
         }
     }
 

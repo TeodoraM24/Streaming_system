@@ -50,7 +50,7 @@ class ReceiptNumberValidationTest {
     }
 
     // -------------------------
-    // Negative tests - Numeric only check
+    // Negative tests - Non numeric values
     // -------------------------
 
     @ParameterizedTest
