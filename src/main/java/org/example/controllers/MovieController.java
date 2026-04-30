@@ -2,9 +2,11 @@ package org.example.controllers;
 
 import jakarta.persistence.EntityManager;
 import org.example.dtos.MovieDTO;
+import org.example.dtos.MovieResponseDTO;
 import org.example.entities.Content;
 import org.example.entities.Movie;
 import org.example.repositories.MovieRepository;
+import org.example.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +18,12 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
 
-    @Autowired private MovieRepository movieRepository;
-    @Autowired private EntityManager entityManager;
+    @Autowired
+    private MovieRepository movieRepository;
+    @Autowired
+    private EntityManager entityManager;
+    @Autowired
+    private MovieService movieService;
 
     @GetMapping
     public List<MovieDTO> getAll() {
@@ -45,5 +51,10 @@ public class MovieController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         movieRepository.deleteById(id);
+    }
+
+    @GetMapping("/top-movies")
+    public List<MovieResponseDTO> getTopRatedMovies() {
+        return movieService.getTop10RatedMovies();
     }
 }
