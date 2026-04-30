@@ -2,10 +2,12 @@ package org.example.services;
 
 import org.example.entities.Receipt;
 import org.example.repositories.ReceiptRepository;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 
+@Service
 public class ReceiptValidation {
 
 

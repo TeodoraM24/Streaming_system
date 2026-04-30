@@ -5,6 +5,7 @@ import org.example.dtos.ReceiptDTO;
 import org.example.entities.Payment;
 import org.example.entities.Receipt;
 import org.example.repositories.ReceiptRepository;
+import org.example.services.ReceiptValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class ReceiptController {
 
     @Autowired private ReceiptRepository repository;
     @Autowired private EntityManager entityManager;
+    @Autowired private ReceiptValidation receiptValidation;
 
     @GetMapping
     public List<ReceiptDTO> getAll() {
@@ -33,6 +35,8 @@ public class ReceiptController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReceiptDTO create(@RequestBody ReceiptDTO dto) {
+        receiptValidation.validateReceiptNumber(dto.getReceiptNumber());
+        receiptValidation.validateReceiptPrice(dto.getPrice());
         Receipt entity = new Receipt(dto);
         if (dto.getPaymentId() != null) {
             entity.setPayment(entityManager.getReference(Payment.class, dto.getPaymentId()));
@@ -68,7 +72,7 @@ public class ReceiptController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable("id") Long id) {
         repository.deleteById(id);
     }
 }
