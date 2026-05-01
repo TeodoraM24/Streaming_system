@@ -5,6 +5,7 @@ import org.example.entities.*;
 import org.example.mongo.documents.*;
 import org.example.mongo.repositories.*;
 import org.example.repositories.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "app.mongo.migrations.enabled", havingValue = "true")
 public class MongoMigrationService {
 
     // PostgreSQL repositories
