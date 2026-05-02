@@ -4,8 +4,9 @@ import jakarta.persistence.EntityManager;
 import org.example.dtos.ReceiptDTO;
 import org.example.entities.Payment;
 import org.example.entities.Receipt;
-import org.example.repositories.ReceiptRepository;
+import org.example.repositories.ReceiptRepository; 
 import org.example.repositories.UserRepository;
+import org.example.services.ReceiptValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ public class ReceiptController {
     @Autowired private ReceiptRepository repository;
     @Autowired private UserRepository userRepository;
     @Autowired private EntityManager entityManager;
+    @Autowired private ReceiptValidation receiptValidation;
 
     // USER: returns receipts belonging to the authenticated user's account
     @GetMapping("/me")
@@ -56,6 +58,8 @@ public class ReceiptController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
     public ReceiptDTO create(@RequestBody ReceiptDTO dto) {
+        receiptValidation.validateReceiptNumber(dto.getReceiptNumber());
+        receiptValidation.validateReceiptPrice(dto.getPrice());
         Receipt entity = new Receipt(dto);
         if (dto.getPaymentId() != null) {
             entity.setPayment(entityManager.getReference(Payment.class, dto.getPaymentId()));
@@ -93,8 +97,7 @@ public class ReceiptController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable("id") Long id) {
         repository.deleteById(id);
     }
 }

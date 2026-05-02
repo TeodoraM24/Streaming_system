@@ -5,6 +5,7 @@ import org.example.entities.*;
 import org.example.neo4j.nodes.*;
 import org.example.neo4j.repositories.*;
 import org.example.repositories.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "app.neo4j.migrations.enabled", havingValue = "true")
 public class MigrationService {
 
     // Postgres repositories

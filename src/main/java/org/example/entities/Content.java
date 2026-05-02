@@ -1,5 +1,6 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -66,6 +67,7 @@ public class Content {
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews;
+
 
     @OneToOne(mappedBy = "content", cascade = CascadeType.ALL)
     private Movie movie;

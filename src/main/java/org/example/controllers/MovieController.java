@@ -2,9 +2,11 @@ package org.example.controllers;
 
 import jakarta.persistence.EntityManager;
 import org.example.dtos.MovieDTO;
+import org.example.dtos.MovieResponseDTO;
 import org.example.entities.Content;
 import org.example.entities.Movie;
 import org.example.repositories.MovieRepository;
+import org.example.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,8 +19,12 @@ import java.util.List;
 @RequestMapping("/movies")
 public class MovieController {
 
-    @Autowired private MovieRepository movieRepository;
-    @Autowired private EntityManager entityManager;
+    @Autowired
+    private MovieRepository movieRepository;
+    @Autowired
+    private EntityManager entityManager;
+    @Autowired
+    private MovieService movieService;
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -49,5 +55,10 @@ public class MovieController {
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         movieRepository.deleteById(id);
+    }
+
+    @GetMapping("/top-movies")
+    public List<MovieResponseDTO> getTopRatedMovies() {
+        return movieService.getTop10RatedMovies();
     }
 }
