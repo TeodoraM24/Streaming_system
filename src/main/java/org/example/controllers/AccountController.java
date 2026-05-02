@@ -7,6 +7,7 @@ import org.example.repositories.AccountRepository;
 import org.example.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,10 @@ public class AccountController {
     @Autowired private AccountRepository accountRepository;
     @Autowired private UserRepository userRepository;
 
+    /**
+     * Resolves the account by ID and verifies the calling user owns it.
+     * Throws 403 if the account belongs to someone else.
+     */
     private Account resolveOwnedAccount(Long accountId, UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
@@ -32,18 +37,32 @@ public class AccountController {
         return account;
     }
 
+    /**
+     * GET /accounts — list all accounts, admin only.
+     */
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<AccountDTO> getAll() {
-        return accountRepository.findAll().stream().map(AccountDTO::convertToDTO).collect(Collectors.toList());
+        return accountRepository.findAll().stream()
+                .map(AccountDTO::convertToDTO)
+                .collect(Collectors.toList());
     }
 
+    /**
+     * GET /accounts/{id} — get any account by ID, admin only.
+     */
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public AccountDTO getById(@PathVariable Long id) {
         return accountRepository.findById(id).map(AccountDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
     }
 
+    /**
+     * GET /accounts/me — authenticated user's own account.
+     */
     @GetMapping("/me")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public AccountDTO getMe(@AuthenticationPrincipal UserDetails userDetails) {
         User user = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
@@ -52,9 +71,11 @@ public class AccountController {
         return AccountDTO.convertToDTO(user.getAccount());
     }
 
-    // NOTE: POST /accounts removed — account creation is handled by POST /auth/register
-
+    /**
+     * PUT /accounts/{id} — full update, ownership enforced.
+     */
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public AccountDTO update(@PathVariable Long id, @RequestBody AccountDTO dto,
                              @AuthenticationPrincipal UserDetails userDetails) {
         Account existing = resolveOwnedAccount(id, userDetails);
@@ -65,7 +86,11 @@ public class AccountController {
         return AccountDTO.convertToDTO(accountRepository.save(existing));
     }
 
+    /**
+     * PATCH /accounts/{id} — partial update, ownership enforced.
+     */
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public AccountDTO patch(@PathVariable Long id, @RequestBody AccountDTO dto,
                             @AuthenticationPrincipal UserDetails userDetails) {
         Account existing = resolveOwnedAccount(id, userDetails);
@@ -76,8 +101,13 @@ public class AccountController {
         return AccountDTO.convertToDTO(accountRepository.save(existing));
     }
 
+    /**
+     * DELETE /accounts/{id} — ownership enforced.
+     * Deleting an account cascades to the linked user (ON DELETE CASCADE in DB).
+     */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
         accountRepository.delete(resolveOwnedAccount(id, userDetails));
     }

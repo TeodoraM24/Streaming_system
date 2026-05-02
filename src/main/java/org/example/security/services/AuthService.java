@@ -1,10 +1,16 @@
-package org.example.security;
+package org.example.security.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entities.Account;
 import org.example.entities.User;
+import org.example.enums.Role;
 import org.example.repositories.AccountRepository;
 import org.example.repositories.UserRepository;
+import org.example.security.DTOs.AuthResponse;
+import org.example.security.DTOs.ChangePasswordRequest;
+import org.example.security.DTOs.LoginRequest;
+import org.example.security.DTOs.RegisterRequest;
+import org.example.security.jwt.JwtService;
 import org.example.services.UserValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,10 +39,8 @@ public class AuthService {
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        // 1. Business Logic Validation (Length, Characters, etc.)
         validateUsernameAndPassword(request.getUsername(), request.getPassword());
 
-        // 2. Database Uniqueness Validation
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
         }
@@ -44,7 +48,6 @@ public class AuthService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
-        // 3. Create Account
         Account account = new Account();
         account.setFirstname(request.getFirstname());
         account.setLastname(request.getLastname());
@@ -52,14 +55,13 @@ public class AuthService {
         account.setMail(request.getMail());
         Account savedAccount = accountRepository.save(account);
 
-        // 4. Create User
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setAccount(savedAccount);
+        user.setRole(Role.USER); // all self-registered users get USER role
         User savedUser = userRepository.save(user);
 
-        // 5. Generate Token
         UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getUsername());
         String token = jwtService.generateToken(userDetails);
 
@@ -83,7 +85,6 @@ public class AuthService {
 
     @Transactional
     public void changePassword(String username, ChangePasswordRequest request) {
-        // 1. Validate the new password against business rules
         List<String> passErrors = validationService.validatePassword(request.getNewPassword());
         if (!passErrors.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.join(" | ", passErrors));
@@ -92,12 +93,10 @@ public class AuthService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        // 2. Verify current password
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Current password is incorrect");
         }
 
-        // 3. Prevent setting the same password
         if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "New password must be different from current password");
         }
@@ -106,9 +105,6 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    /**
-     * Helper to run business validations and throw 400 Bad Request if they fail.
-     */
     private void validateUsernameAndPassword(String username, String password) {
         List<String> userErrors = validationService.validateUsername(username);
         List<String> passErrors = validationService.validatePassword(password);

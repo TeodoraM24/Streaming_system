@@ -1,7 +1,13 @@
-package org.example.security;
+package org.example.security.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.security.DTOs.AuthResponse;
+import org.example.security.DTOs.ChangePasswordRequest;
+import org.example.security.DTOs.LoginRequest;
+import org.example.security.DTOs.RegisterRequest;
+import org.example.security.services.AuthService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     /**
-     * POST /auth/register
-     * Creates both Account + User in one request. No token required.
+     * POST /auth/register — public, no token required.
      */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -24,8 +29,7 @@ public class AuthController {
     }
 
     /**
-     * POST /auth/login
-     * Returns a JWT on valid credentials.
+     * POST /auth/login — public, no token required.
      */
     @PostMapping("/login")
     public AuthResponse login(@RequestBody LoginRequest request) {
@@ -33,13 +37,11 @@ public class AuthController {
     }
 
     /**
-     * POST /auth/change-password
-     * Requires a valid JWT. Verifies current password before hashing and saving the new one.
-     *
-     * Body: { "currentPassword": "...", "newPassword": "..." }
+     * POST /auth/change-password — any authenticated user, acts on own account via JWT.
      */
     @PostMapping("/change-password")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public void changePassword(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody ChangePasswordRequest request

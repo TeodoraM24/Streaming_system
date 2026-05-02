@@ -7,6 +7,7 @@ import org.example.entities.Movie;
 import org.example.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,18 +21,20 @@ public class MovieController {
     @Autowired private EntityManager entityManager;
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public List<MovieDTO> getAll() {
         return movieRepository.findAll().stream().map(MovieDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public MovieDTO getById(@PathVariable Long id) {
         return movieRepository.findById(id).map(MovieDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public MovieDTO patch(@PathVariable Long id, @RequestBody MovieDTO dto) {
         Movie entity = movieRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (dto.getDuration() != null) entity.setDuration(dto.getDuration());
@@ -43,6 +46,7 @@ public class MovieController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         movieRepository.deleteById(id);
     }

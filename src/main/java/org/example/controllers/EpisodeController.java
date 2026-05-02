@@ -7,6 +7,7 @@ import org.example.entities.Season;
 import org.example.repositories.EpisodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,11 +21,13 @@ public class EpisodeController {
     @Autowired private EntityManager entityManager;
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public List<EpisodeDTO> getAll() {
         return repository.findAll().stream().map(EpisodeDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public EpisodeDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(EpisodeDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -32,6 +35,7 @@ public class EpisodeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public EpisodeDTO create(@RequestBody EpisodeDTO dto) {
         Episode entity = new Episode(dto);
         if (dto.getSeasonId() != null) {
@@ -41,6 +45,7 @@ public class EpisodeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public EpisodeDTO update(@PathVariable Long id, @RequestBody EpisodeDTO dto) {
         Episode entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -55,6 +60,7 @@ public class EpisodeController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public EpisodeDTO patch(@PathVariable Long id, @RequestBody EpisodeDTO dto) {
         Episode entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -70,6 +76,7 @@ public class EpisodeController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         repository.deleteById(id);
     }
