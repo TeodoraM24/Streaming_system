@@ -101,14 +101,5 @@ public class AccountController {
         return AccountDTO.convertToDTO(accountRepository.save(existing));
     }
 
-    /**
-     * DELETE /accounts/{id} — ownership enforced.
-     * Deleting an account cascades to the linked user (ON DELETE CASCADE in DB).
-     */
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public void delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
-        accountRepository.delete(resolveOwnedAccount(id, userDetails));
-    }
+
 }
