@@ -76,8 +76,7 @@ public class UserController {
     }
 
     /**
-     * DELETE /users/me — delete own user record.
-     * Account is not deleted here — use DELETE /accounts/me for full removal.
+     * DELETE /users/me — deletes the user and its linked account.
      */
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)

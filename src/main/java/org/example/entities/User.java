@@ -27,8 +27,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "accounts_account_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "accounts_account_id", unique = true)
     private Account account;
 
     @Enumerated(EnumType.STRING)

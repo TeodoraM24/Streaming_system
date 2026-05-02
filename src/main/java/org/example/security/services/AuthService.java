@@ -53,19 +53,19 @@ public class AuthService {
         account.setLastname(request.getLastname());
         account.setPhonenumber(request.getPhonenumber());
         account.setMail(request.getMail());
-        Account savedAccount = accountRepository.save(account);
 
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setAccount(savedAccount);
-        user.setRole(Role.USER); // all self-registered users get USER role
-        User savedUser = userRepository.save(user);
+        user.setAccount(account);
+        user.setRole(Role.USER);
+        User savedUser = userRepository.save(user); // cascades to account automatically
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getUsername());
         String token = jwtService.generateToken(userDetails);
 
-        return new AuthResponse(token, savedUser.getUsersId(), savedUser.getUsername(), savedAccount.getAccountId());
+        return new AuthResponse(token, savedUser.getUsersId(), savedUser.getUsername(),
+                savedUser.getAccount().getAccountId());
     }
 
     public AuthResponse login(LoginRequest request) {

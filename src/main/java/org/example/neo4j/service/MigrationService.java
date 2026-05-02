@@ -167,11 +167,10 @@ public class MigrationService {
     public void migrateAccountUserRelationships() {
         for (Account account : accountRepository.findAll()) {
             AccountNode accountNode = accountNeoRepository.findById(account.getAccountId()).orElse(null);
-            if (accountNode == null || account.getUsers() == null) continue;
+            if (accountNode == null || account.getUser() == null) continue;  // single user now
 
-            for (User user : account.getUsers()) {
-                userNeoRepository.findById(user.getUsersId()).ifPresent(accountNode.getUsers()::add);
-            }
+            userNeoRepository.findById(account.getUser().getUsersId())
+                    .ifPresent(accountNode::setUser);                        // setUser, not getUsers()::add
 
             accountNeoRepository.save(accountNode);
         }

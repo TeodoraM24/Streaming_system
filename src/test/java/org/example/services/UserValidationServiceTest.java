@@ -1,4 +1,5 @@
-import org.example.services.UserValidationService;
+package org.example.services;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
