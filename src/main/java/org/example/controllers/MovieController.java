@@ -5,6 +5,7 @@ import org.example.dtos.MovieDTO;
 import org.example.dtos.MovieResponseDTO;
 import org.example.entities.Content;
 import org.example.entities.Movie;
+import org.example.repositories.GenreRepository;
 import org.example.repositories.MovieRepository;
 import org.example.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class MovieController {
     private EntityManager entityManager;
     @Autowired
     private MovieService movieService;
+    @Autowired
+    private GenreRepository genreRepository;
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -60,5 +63,22 @@ public class MovieController {
     @GetMapping("/top-movies")
     public List<MovieResponseDTO> getTopRatedMovies() {
         return movieService.getTop10RatedMovies();
+    }
+
+
+    @GetMapping("/genre/{genreId}")
+    @PreAuthorize("hasRole('USER')")
+    public List<MovieDTO> getMoviesByGenre(@PathVariable Long genreId) {
+        // Validate that the genre actually exists — otherwise 404
+        if (!genreRepository.existsById(genreId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found");
+        }
+
+        List<MovieDTO> movies = movieRepository.findByContent_Genres_GenreId(genreId)
+                .stream()
+                .map(MovieDTO::convertToDTO)
+                .toList();
+
+        return movies; // Empty list is a valid 200 — caller shows "no movies found" message
     }
 }
