@@ -11,6 +11,7 @@ import org.example.security.DTOs.ChangePasswordRequest;
 import org.example.security.DTOs.LoginRequest;
 import org.example.security.DTOs.RegisterRequest;
 import org.example.security.jwt.JwtService;
+import org.example.services.AccountValidation;
 import org.example.services.UserValidationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,16 +37,21 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final UserValidationService validationService;
+    private final AccountValidation accountValidation;
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         validateUsernameAndPassword(request.getUsername(), request.getPassword());
+        validateAccountDetails(request);
 
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
         }
         if (accountRepository.findByMail(request.getMail()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+        }
+        if (accountRepository.findByPhonenumber(request.getPhonenumber()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Phone number already in use");
         }
 
         Account account = new Account();
@@ -115,6 +121,18 @@ public class AuthService {
 
         if (!allErrors.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.join(" | ", allErrors));
+        }
+    }
+
+    private void validateAccountDetails(RegisterRequest request) {
+        List<String> accountErrors = new ArrayList<>();
+        accountErrors.addAll(accountValidation.validateName(request.getFirstname()));
+        accountErrors.addAll(accountValidation.validateName(request.getLastname()));
+        accountErrors.addAll(accountValidation.validatePhoneNumber(request.getPhonenumber()));
+        accountErrors.addAll(accountValidation.validateEmail(request.getMail()));
+
+        if (!accountErrors.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.join(" | ", accountErrors));
         }
     }
 }

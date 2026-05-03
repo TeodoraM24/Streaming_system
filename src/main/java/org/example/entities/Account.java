@@ -23,6 +23,8 @@ public class Account {
 
     private String firstname;
     private String lastname;
+
+    @Column (unique = true, nullable = false)
     private String phonenumber;
 
     @Column(unique = true, nullable = false)

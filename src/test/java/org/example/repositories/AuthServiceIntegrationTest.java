@@ -70,7 +70,12 @@ class AuthServiceIntegrationTest {
     // ─── Helper ──────────────────────────────────────────────────────────────────
 
     private RegisterRequest validRequest(String username, String mail) {
-        return new RegisterRequest(username, "Secret123!!", "John", "Doe", "12345678", mail);
+        return new RegisterRequest(username, "Secret123!!", "John", "Doe", "21234567", mail);
+    }
+
+    // Request for account
+    private RegisterRequest validRequest(String username, String mail, String phoneNumber) {
+        return new RegisterRequest(username, "Secret123!!", "John", "Doe", phoneNumber, mail);
     }
 
     // ─── Happy Path ──────────────────────────────────────────────────────────────
@@ -88,7 +93,7 @@ class AuthServiceIntegrationTest {
     @Test
     void register_validRequest_persistsUserAndAccountCorrectly() {
         authService.register(new RegisterRequest(
-                "jdotj123", "Secret123!!", "John", "Doe", "12345678", "john@example.com"
+                "jdotj123", "Secret123!!", "John", "Doe", "21234567", "john@example.com"
         ));
 
         User savedUser = userRepository.findByUsername("jdotj123")
@@ -103,7 +108,7 @@ class AuthServiceIntegrationTest {
         assertEquals("john@example.com", savedUser.getAccount().getMail());
         assertEquals("John", savedUser.getAccount().getFirstname());
         assertEquals("Doe", savedUser.getAccount().getLastname());
-        assertEquals("12345678", savedUser.getAccount().getPhonenumber());
+        assertEquals("21234567", savedUser.getAccount().getPhonenumber());
 
         // Cross-verify from account side
         accountRepository.findByMail("john@example.com")
@@ -116,13 +121,58 @@ class AuthServiceIntegrationTest {
     void register_invalidCredentials_throwsBadRequest() {
         // Proves validation is called by AuthService — detail is covered in UserValidationServiceTest
         RegisterRequest request = new RegisterRequest(
-                "ab", "weak", "John", "Doe", "12345678", "john@example.com"
+                "ab", "weak", "John", "Doe", "21234567", "john@example.com"
         );
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class,
                 () -> authService.register(request));
         assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
     }
+
+    @Test
+    void register_invalidFirstname_throwsBadRequest() {
+        RegisterRequest request = new RegisterRequest(
+                "jdotj123", "Secret123!!", "mads", "Doe", "21234567", "john@example.com"
+        );
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> authService.register(request));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+    }
+
+    @Test
+    void register_invalidLastname_throwsBadRequest() {
+        RegisterRequest request = new RegisterRequest(
+                "jdotj123", "Secret123!!", "John", "DOE", "21234567", "john@example.com"
+        );
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> authService.register(request));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+    }
+
+    @Test
+    void register_invalidPhoneNumber_throwsBadRequest() {
+        RegisterRequest request = new RegisterRequest(
+                "jdotj123", "Secret123!!", "John", "Doe", "10123456", "john@example.com"
+        );
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> authService.register(request));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+    }
+
+    @Test
+    void register_invalidEmail_throwsBadRequest() {
+        RegisterRequest request = new RegisterRequest(
+                "jdotj123", "Secret123!!", "John", "Doe", "21234567", "textdomain.tld"
+        );
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> authService.register(request));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+    }
+
     // ─── Duplicate Tests ─────────────────────────────────────────────────────────
 
     @Test
@@ -140,6 +190,15 @@ class AuthServiceIntegrationTest {
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class,
                 () -> authService.register(validRequest("janedoe1", "john@example.com")));
+        assertEquals(HttpStatus.CONFLICT, ex.getStatusCode());
+    }
+
+    @Test
+    void register_duplicatePhoneNumber_throwsConflict() {
+        authService.register(validRequest("jdotj123", "john@example.com", "21234567"));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> authService.register(validRequest("janedoe1", "jane@example.com", "21234567")));
         assertEquals(HttpStatus.CONFLICT, ex.getStatusCode());
     }
 }

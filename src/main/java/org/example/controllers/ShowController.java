@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import org.example.dtos.ShowDTO;
 import org.example.entities.Content;
 import org.example.entities.Show;
+import org.example.repositories.GenreRepository;
 import org.example.repositories.ShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ShowController {
 
     @Autowired private ShowRepository repository;
+    @Autowired private GenreRepository genreRepository;
     @Autowired private EntityManager entityManager;
 
     @GetMapping
@@ -31,6 +33,19 @@ public class ShowController {
     public ShowDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(ShowDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/genre/{genreId}")
+    @PreAuthorize("hasRole('USER')")
+    public List<ShowDTO> getShowsByGenre(@PathVariable Long genreId) {
+        if (!genreRepository.existsById(genreId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found");
+        }
+
+        return repository.findByContent_Genres_GenreId(genreId)
+                .stream()
+                .map(ShowDTO::convertToDTO)
+                .toList();
     }
 
     @PutMapping("/{id}")
