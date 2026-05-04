@@ -6,6 +6,7 @@ import org.example.entities.Content;
 import org.example.entities.Profile;
 import org.example.entities.Review;
 import org.example.repositories.ReviewRepository;
+import org.example.services.ReviewValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +21,7 @@ public class ReviewController {
 
     @Autowired private ReviewRepository repository;
     @Autowired private EntityManager entityManager;
+    @Autowired private ReviewValidationService reviewValidationService;
 
     // USER: reviews are public reads — any authenticated user can browse
     @GetMapping
@@ -40,6 +42,7 @@ public class ReviewController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     public ReviewDTO create(@RequestBody ReviewDTO dto) {
+        reviewValidationService.validateCreateReview(dto);
         Review entity = new Review(dto);
         if (dto.getProfileId() != null) {
             entity.setProfile(entityManager.getReference(Profile.class, dto.getProfileId()));
@@ -54,6 +57,7 @@ public class ReviewController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER') and @reviewOwnershipService.isOwner(#id, authentication.name) or hasRole('ADMIN')")
     public ReviewDTO update(@PathVariable Long id, @RequestBody ReviewDTO dto) {
+        reviewValidationService.validateCreateReview(dto);
         Review entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         entity.setTitle(dto.getTitle());
@@ -69,9 +73,18 @@ public class ReviewController {
     public ReviewDTO patch(@PathVariable Long id, @RequestBody ReviewDTO dto) {
         Review entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if (dto.getTitle() != null) entity.setTitle(dto.getTitle());
-        if (dto.getRating() != null) entity.setRating(dto.getRating());
-        if (dto.getComment() != null) entity.setComment(dto.getComment());
+        if (dto.getTitle() != null) {
+            reviewValidationService.validateTitle(dto.getTitle());
+            entity.setTitle(dto.getTitle());
+        }
+        if (dto.getRating() != null) {
+            reviewValidationService.validateRating(dto.getRating());
+            entity.setRating(dto.getRating());
+        }
+        if (dto.getComment() != null) {
+            reviewValidationService.validateComment(dto.getComment());
+            entity.setComment(dto.getComment());
+        }
         if (dto.getCreatedAt() != null) entity.setCreatedAt(dto.getCreatedAt());
         return ReviewDTO.convertToDTO(repository.save(entity));
     }
