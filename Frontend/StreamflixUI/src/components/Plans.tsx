@@ -66,6 +66,38 @@ export const Plans: React.FC = () => {
               <p style={{ color: 'var(--text-muted)', fontSize: '14px', margin: '16px 0', lineHeight: '1.5' }}>
                 {plan.description}
               </p>
+              
+              {plan.name.toLowerCase().includes('premium') && (
+                <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0', fontSize: '14px', color: 'var(--text)' }}>
+                  <li style={{ padding: '6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: 'var(--accent)' }}>✓</span> Ad-free
+                  </li>
+                  <li style={{ padding: '6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: 'var(--accent)' }}>✓</span> Higher speed
+                  </li>
+                  <li style={{ padding: '6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: 'var(--accent)' }}>✓</span> Offline downloads
+                  </li>
+                  <li style={{ padding: '6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: 'var(--accent)' }}>✓</span> Ultra HD + Dolby
+                  </li>
+                    <li style={{ padding: '6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: 'var(--accent)' }}>✓</span> Stream on 10 devices
+                  </li>
+                </ul>
+              )}
+              
+              {plan.name.toLowerCase().includes('standard') && (
+                <ul style={{ listStyle: 'none', padding: 0, margin: '16px 0', fontSize: '14px', color: 'var(--text)' }}>
+                  <li style={{ padding: '6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: 'var(--accent)' }}>✓</span> Ads included
+                  </li>
+                  <li style={{ padding: '6px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ color: 'var(--accent)' }}>✓</span> Stream on 1 device
+                  </li>
+                </ul>
+              )}
+              
               <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
                 {plan.active
                   ? <span className="sf-badge sf-badge-success">✓ Available</span>

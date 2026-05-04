@@ -18,7 +18,12 @@ export const Movies: React.FC = () => {
     try {
       const allContent = await api.getContent();
       const movieContent = allContent.filter((content: any) => content.type === 'MOVIE');
-      setMovies(movieContent);
+      const sortedMovies = movieContent.sort((a: any, b: any) => {
+        const titleA = (a.title || a.originaltitle || '').toLowerCase();
+        const titleB = (b.title || b.originaltitle || '').toLowerCase();
+        return titleA.localeCompare(titleB);
+      });
+      setMovies(sortedMovies);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load movies');
     } finally {
@@ -59,7 +64,7 @@ export const Movies: React.FC = () => {
           </button>
           <button onClick={loadTopMovies}
             className={`sf-btn sf-btn-filter${showTopRated ? ' active' : ''}`}>
-            ⭐ Top Rated
+            ⭐ Top 10 Rated
           </button>
         </div>
       </div>
