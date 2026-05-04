@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class PaymentMethodController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PaymentMethodDTO create(@RequestBody PaymentMethodDTO dto) {
+    public PaymentMethodDTO create(@Valid @RequestBody PaymentMethodDTO dto) {
         PaymentMethod entity = new PaymentMethod(dto);
         if (dto.getAccountId() != null) {
             entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
@@ -41,7 +42,7 @@ public class PaymentMethodController {
     }
 
     @PutMapping("/{id}")
-    public PaymentMethodDTO update(@PathVariable Long id, @RequestBody PaymentMethodDTO dto) {
+    public PaymentMethodDTO update(@PathVariable Long id, @Valid @RequestBody PaymentMethodDTO dto) {
         PaymentMethod entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         entity.setCardNumber(dto.getCardNumber());
