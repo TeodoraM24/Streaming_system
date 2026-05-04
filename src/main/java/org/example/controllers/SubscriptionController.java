@@ -5,6 +5,7 @@ import org.example.dtos.SubscriptionDTO;
 import org.example.entities.Account;
 import org.example.entities.Plan;
 import org.example.entities.Subscription;
+import org.example.enums.SubscriptionStatus;
 import org.example.repositories.SubscriptionRepository;
 import org.example.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -58,13 +60,27 @@ public class SubscriptionController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     public SubscriptionDTO create(@RequestBody SubscriptionDTO dto) {
-        Subscription entity = new Subscription(dto);
-        if (dto.getAccountId() != null) {
-            entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
+
+        // 👉 HER
+        boolean hasActive = repository.findAll().stream()
+                .anyMatch(s -> s.getAccount().getAccountId().equals(dto.getAccountId())
+                        && s.getStatus() == SubscriptionStatus.ACTIVE);
+
+        if (hasActive) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already has active subscription");
         }
-        if (dto.getPlanId() != null) {
-            entity.setPlan(entityManager.getReference(Plan.class, dto.getPlanId()));
-        }
+
+        // 👉 Derefter din normale kode
+        Subscription entity = new Subscription();
+
+        entity.setStartdate(LocalDate.now());
+        entity.setEnddate(LocalDate.now().plusMonths(1));
+        entity.setNextBillDate(LocalDate.now().plusMonths(1));
+        entity.setStatus(SubscriptionStatus.ACTIVE);
+
+        entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
+        entity.setPlan(entityManager.getReference(Plan.class, dto.getPlanId()));
+
         return SubscriptionDTO.convertToDTO(repository.save(entity));
     }
 
