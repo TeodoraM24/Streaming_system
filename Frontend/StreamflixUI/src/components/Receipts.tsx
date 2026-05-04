@@ -16,41 +16,51 @@ export const Receipts: React.FC = () => {
 
   return (
     <div style={{ maxWidth: '700px' }}>
-      <h2>My Receipts</h2>
-      {loading && <div>Loading...</div>}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+      <div className="sf-page-header" style={{ marginBottom: '28px' }}>
+        <h2 className="sf-page-title">🧾 My Receipts</h2>
+        <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{receipts.length} receipt{receipts.length !== 1 ? 's' : ''}</span>
+      </div>
+
+      {loading && <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>}
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
 
       {!loading && receipts.length === 0 && !error && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          No receipts yet. Complete a subscription payment to generate a receipt.
-        </div>
+        <div className="sf-empty">🧾 No receipts yet. Complete a subscription payment to generate one.</div>
       )}
 
       {receipts.map((r) => (
         <div key={r.receiptId} style={{
-          background: 'white', borderRadius: '8px', padding: '20px',
-          marginBottom: '16px', border: '1px solid #ddd', borderLeft: '4px solid #28a745',
+          background: 'var(--surface-2)',
+          borderRadius: '14px',
+          padding: '22px 24px',
+          marginBottom: '14px',
+          border: '1px solid var(--border)',
+          borderLeft: '4px solid var(--success)',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
-              <div style={{ fontSize: '11px', textTransform: 'uppercase', color: '#888', letterSpacing: '1px', marginBottom: '4px' }}>
+              <div style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1.2px', color: 'var(--text-dim)', marginBottom: '4px', fontWeight: '700' }}>
                 Receipt
               </div>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#333' }}>
+              <div style={{ fontSize: '20px', fontWeight: '700', color: 'var(--text)' }}>
                 #{r.receiptNumber}
               </div>
             </div>
-            <span style={{ background: '#d4edda', color: '#155724', padding: '4px 10px', borderRadius: '12px', fontSize: '13px', fontWeight: 'bold' }}>
-              ✓ PAID
-            </span>
+            <span className="sf-badge sf-badge-success">✓ Paid</span>
           </div>
-          <hr style={{ border: 'none', borderTop: '1px solid #eee', margin: '12px 0' }} />
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '14px' }}>
-            <div><span style={{ color: '#888' }}>Amount</span><br /><strong>{r.price != null ? r.price : '—'}</strong></div>
-            <div><span style={{ color: '#888' }}>Payment ID</span><br /><strong>#{r.paymentId}</strong></div>
+          <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '16px 0' }} />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', fontSize: '14px' }}>
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>Amount</div>
+              <div style={{ fontSize: '18px', fontWeight: '700', color: 'var(--success)' }}>{r.price != null ? r.price : '—'}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>Payment ID</div>
+              <div style={{ fontWeight: '600', color: 'var(--text-muted)' }}>#{r.paymentId}</div>
+            </div>
             <div style={{ gridColumn: '1 / -1' }}>
-              <span style={{ color: '#888' }}>Date</span><br />
-              <strong>{r.paydate ? new Date(r.paydate).toLocaleString() : '—'}</strong>
+              <div style={{ fontSize: '11px', color: 'var(--text-dim)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>Date</div>
+              <div style={{ fontWeight: '600', color: 'var(--text-muted)' }}>{r.paydate ? new Date(r.paydate).toLocaleString() : '—'}</div>
             </div>
           </div>
         </div>

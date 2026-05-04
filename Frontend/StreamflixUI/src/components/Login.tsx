@@ -23,38 +23,43 @@ export const Login: React.FC<{ onSwitchToRegister: () => void }> = ({ onSwitchTo
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
+    <div style={{ minHeight: '100vh', background: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ width: '100%', maxWidth: '400px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div style={{ fontSize: '36px', marginBottom: '8px' }}>▶</div>
+          <div style={{ fontSize: '26px', fontWeight: '800', background: 'linear-gradient(135deg, #6366f1, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Streamflix
+          </div>
+          <p style={{ color: 'var(--text-muted)', marginTop: '8px', fontSize: '14px' }}>Sign in to your account</p>
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label style={{ display: 'block', marginBottom: '5px' }}>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-          />
+
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '16px', padding: '32px' }}>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '18px' }}>
+              <label className="sf-label">Username</label>
+              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}
+                required placeholder="Enter your username" className="sf-input" />
+            </div>
+            <div style={{ marginBottom: '24px' }}>
+              <label className="sf-label">Password</label>
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+                required placeholder="Enter your password" className="sf-input" />
+            </div>
+            {error && <div className="sf-alert sf-alert-error">{error}</div>}
+            <button type="submit" disabled={loading} className="sf-btn sf-btn-primary"
+              style={{ width: '100%', padding: '12px', fontSize: '15px' }}>
+              {loading ? 'Signing in…' : 'Sign In'}
+            </button>
+          </form>
+
+          <div style={{ marginTop: '20px', textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+            <span style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Don't have an account? </span>
+            <button onClick={onSwitchToRegister}
+              style={{ background: 'none', border: 'none', color: 'var(--accent-light)', cursor: 'pointer', fontSize: '14px', fontWeight: '600', padding: 0 }}>
+              Register
+            </button>
+          </div>
         </div>
-        {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-        <button type="submit" disabled={loading} style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
-      <div style={{ marginTop: '15px', textAlign: 'center' }}>
-        <button onClick={onSwitchToRegister} style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}>
-          Don't have an account? Register
-        </button>
       </div>
     </div>
   );

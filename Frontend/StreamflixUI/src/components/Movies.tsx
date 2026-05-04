@@ -48,48 +48,51 @@ export const Movies: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>Movies</h2>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => { setShowTopRated(false); loadMovies(); }} style={{ padding: '8px 16px', cursor: 'pointer' }}>
+      <div className="sf-page-header">
+        <h2 className="sf-page-title">
+          🎬 {showTopRated ? 'Top Rated Movies' : 'Movies'}
+        </h2>
+        <div className="sf-filter-bar">
+          <button onClick={() => { setShowTopRated(false); loadMovies(); }}
+            className={`sf-btn sf-btn-filter${!showTopRated ? ' active' : ''}`}>
             All Movies
           </button>
-          <button onClick={loadTopMovies} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-            Top Rated
+          <button onClick={loadTopMovies}
+            className={`sf-btn sf-btn-filter${showTopRated ? ' active' : ''}`}>
+            ⭐ Top Rated
           </button>
         </div>
       </div>
 
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-      {loading && <div>Loading...</div>}
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
+      {loading && <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
         {displayMovies.map((movie) => (
-          <div key={movie.contentId || movie.movieId} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', background: 'white', position: 'relative' }}>
-            <h3 style={{ marginTop: 0 }}>{movie.title || movie.originaltitle || 'Untitled'}</h3>
-            {movie.duration && <p><strong>Duration:</strong> {movie.duration} min</p>}
-            {movie.rating !== undefined && <p><strong>Rating:</strong> {movie.rating}/10</p>}
-            {movie.releasedate && <p><strong>Release:</strong> {movie.releasedate}</p>}
-            {movie.description && <p style={{ fontSize: '14px', color: '#666' }}>{movie.description}</p>}
-            <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-              <button
-                onClick={() => setPlayingMovie(movie)}
-                style={{
-                  flex: 1, padding: '10px', backgroundColor: '#007bff',
-                  color: 'white', border: 'none', borderRadius: '4px',
-                  cursor: 'pointer', fontSize: '15px', fontWeight: 'bold',
-                }}
-              >
-                ▶️ Play
+          <div key={movie.contentId || movie.movieId} className="sf-card" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ marginBottom: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+              <h3 style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.4', color: 'var(--text)' }}>
+                {movie.title || movie.originaltitle || 'Untitled'}
+              </h3>
+              {movie.rating !== undefined && (
+                <span className="sf-rating" style={{ flexShrink: 0 }}>⭐ {Number(movie.rating).toFixed(1)}</span>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '10px', flexWrap: 'wrap' }}>
+              {movie.duration && <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>🕐 {movie.duration} min</span>}
+              {movie.releasedate && <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>📅 {movie.releasedate}</span>}
+            </div>
+            {movie.description && (
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5', flex: 1, marginBottom: '14px',
+                display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {movie.description}
+              </p>
+            )}
+            <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+              <button onClick={() => setPlayingMovie(movie)} className="sf-btn sf-btn-primary" style={{ flex: 1 }}>
+                ▶ Play
               </button>
-              <button
-                onClick={() => setReviewingMovie(movie)}
-                style={{
-                  flex: 1, padding: '10px', backgroundColor: '#28a745',
-                  color: 'white', border: 'none', borderRadius: '4px',
-                  cursor: 'pointer', fontSize: '15px', fontWeight: 'bold',
-                }}
-              >
+              <button onClick={() => setReviewingMovie(movie)} className="sf-btn sf-btn-ghost" style={{ flex: 1 }}>
                 ⭐ Review
               </button>
             </div>
@@ -98,9 +101,7 @@ export const Movies: React.FC = () => {
       </div>
 
       {!loading && displayMovies.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          No movies found
-        </div>
+        <div className="sf-empty">🎬 No movies found</div>
       )}
 
       {playingMovie && (

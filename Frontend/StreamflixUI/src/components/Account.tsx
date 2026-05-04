@@ -51,70 +51,65 @@ export const Account: React.FC = () => {
     loadAccount();
   }, []);
 
-  if (loading && !account) return <div>Loading...</div>;
+  if (loading && !account) return <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>;
+
+  const row = (label: string, value: string) => (
+    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid var(--border)' }}>
+      <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.7px' }}>{label}</span>
+      <span style={{ fontWeight: '600', color: 'var(--text)' }}>{value || '—'}</span>
+    </div>
+  );
 
   return (
-    <div style={{ maxWidth: '600px' }}>
-      <h2>My Account</h2>
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+    <div style={{ maxWidth: '560px' }}>
+      <div className="sf-page-header" style={{ marginBottom: '24px' }}>
+        <h2 className="sf-page-title">⚙️ My Account</h2>
+        {!editing && account && (
+          <button onClick={() => setEditing(true)} className="sf-btn sf-btn-ghost">✏️ Edit</button>
+        )}
+      </div>
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
 
       {!editing && account && (
-        <div style={{ background: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #ddd' }}>
-          <p><strong>First Name:</strong> {account.firstname}</p>
-          <p><strong>Last Name:</strong> {account.lastname}</p>
-          <p><strong>Phone:</strong> {account.phonenumber}</p>
-          <p><strong>Email:</strong> {account.mail}</p>
-          <button onClick={() => setEditing(true)} style={{ padding: '8px 16px', cursor: 'pointer', marginTop: '10px' }}>
-            Edit Account
-          </button>
+        <div style={{ background: 'var(--surface-2)', borderRadius: '14px', border: '1px solid var(--border)', padding: '4px 20px' }}>
+          {row('First Name', account.firstname)}
+          {row('Last Name', account.lastname)}
+          {row('Phone', account.phonenumber)}
+          {row('Email', account.mail)}
         </div>
       )}
 
       {editing && (
-        <form onSubmit={handleUpdate} style={{ background: 'white', padding: '20px', borderRadius: '8px', border: '1px solid #ddd' }}>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px' }}>First Name:</label>
-            <input
-              type="text"
-              value={formData.firstname}
+        <form onSubmit={handleUpdate} style={{ background: 'var(--surface-2)', padding: '28px', borderRadius: '14px', border: '1px solid var(--border)' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <label className="sf-label">First Name</label>
+            <input type="text" value={formData.firstname}
               onChange={(e) => setFormData({ ...formData, firstname: e.target.value })}
-              style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-            />
+              className="sf-input" />
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px' }}>Last Name:</label>
-            <input
-              type="text"
-              value={formData.lastname}
+          <div style={{ marginBottom: '16px' }}>
+            <label className="sf-label">Last Name</label>
+            <input type="text" value={formData.lastname}
               onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
-              style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-            />
+              className="sf-input" />
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px' }}>Phone:</label>
-            <input
-              type="tel"
-              value={formData.phonenumber}
+          <div style={{ marginBottom: '16px' }}>
+            <label className="sf-label">Phone</label>
+            <input type="tel" value={formData.phonenumber}
               onChange={(e) => setFormData({ ...formData, phonenumber: e.target.value })}
-              style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-            />
+              className="sf-input" />
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px' }}>Email:</label>
-            <input
-              type="email"
-              value={formData.mail}
+          <div style={{ marginBottom: '24px' }}>
+            <label className="sf-label">Email</label>
+            <input type="email" value={formData.mail}
               onChange={(e) => setFormData({ ...formData, mail: e.target.value })}
-              style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-            />
+              className="sf-input" />
           </div>
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button type="submit" disabled={loading} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-              {loading ? 'Saving...' : 'Save'}
+            <button type="submit" disabled={loading} className="sf-btn sf-btn-primary">
+              {loading ? 'Saving…' : 'Save Changes'}
             </button>
-            <button type="button" onClick={() => setEditing(false)} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-              Cancel
-            </button>
+            <button type="button" onClick={() => setEditing(false)} className="sf-btn sf-btn-ghost">Cancel</button>
           </div>
         </form>
       )}

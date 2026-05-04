@@ -16,16 +16,16 @@ export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('movies');
   const { username, logout } = useAuth();
 
-  const tabs: { key: Tab; label: string }[] = [
-    { key: 'movies', label: 'Movies' },
-    { key: 'shows', label: 'Shows' },
-    { key: 'genres', label: 'Genres' },
-    { key: 'reviews', label: 'Reviews' },
-    { key: 'profiles', label: 'Profiles' },
-    { key: 'account', label: 'Account' },
-    { key: 'plans', label: 'Plans' },
-    { key: 'subscriptions', label: 'Subscriptions' },
-    { key: 'receipts', label: 'Receipts' },
+  const tabs: { key: Tab; label: string; icon: string }[] = [
+    { key: 'movies', label: 'Movies', icon: '🎬' },
+    { key: 'shows', label: 'TV Shows', icon: '📺' },
+    { key: 'genres', label: 'Genres', icon: '🎭' },
+    { key: 'reviews', label: 'Reviews', icon: '⭐' },
+    { key: 'profiles', label: 'Profiles', icon: '👤' },
+    { key: 'account', label: 'Account', icon: '⚙️' },
+    { key: 'plans', label: 'Plans', icon: '💎' },
+    { key: 'subscriptions', label: 'Subscriptions', icon: '📋' },
+    { key: 'receipts', label: 'Receipts', icon: '🧾' },
   ];
 
   const renderContent = () => {
@@ -45,7 +45,7 @@ export const Dashboard: React.FC = () => {
       case 'plans':
         return <Plans />;
       case 'subscriptions':
-        return <Subscriptions />;
+        return <Subscriptions onNavigate={(tab) => setActiveTab(tab as Tab)} />;
       case 'receipts':
         return <Receipts />;
       default:
@@ -54,42 +54,64 @@ export const Dashboard: React.FC = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <header style={{ background: '#333', color: 'white', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1 style={{ margin: 0, fontSize: '24px' }}>Streamflix</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <span>Welcome, {username}</span>
-          <button onClick={logout} style={{ padding: '8px 16px', cursor: 'pointer', background: '#555', color: 'white', border: 'none', borderRadius: '4px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+      <header style={{
+        background: 'var(--surface)',
+        borderBottom: '1px solid var(--border)',
+        padding: '0 24px',
+        height: '60px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '22px' }}>▶</span>
+          <span style={{ fontSize: '18px', fontWeight: '800', background: 'linear-gradient(135deg, #6366f1, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Streamflix
+          </span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+            👤 <strong style={{ color: 'var(--text)' }}>{username}</strong>
+          </span>
+          <button onClick={logout} className="sf-btn sf-btn-ghost" style={{ fontSize: '13px', padding: '7px 14px' }}>
             Logout
           </button>
         </div>
       </header>
 
       <div style={{ display: 'flex', flex: 1 }}>
-        <nav style={{ width: '200px', background: '#f5f5f5', padding: '20px', borderRight: '1px solid #ddd' }}>
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              style={{
-                display: 'block',
-                width: '100%',
-                padding: '10px',
-                marginBottom: '10px',
-                textAlign: 'left',
-                background: activeTab === tab.key ? '#007bff' : 'white',
-                color: activeTab === tab.key ? 'white' : 'black',
-                border: '1px solid #ddd',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              {tab.label}
+        <nav style={{
+          width: '220px',
+          background: 'var(--surface)',
+          borderRight: '1px solid var(--border)',
+          padding: '20px 12px',
+          flexShrink: 0,
+        }}>
+          <div style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1.2px', color: 'var(--text-dim)', marginBottom: '10px', padding: '0 12px' }}>
+            Browse
+          </div>
+          {tabs.slice(0, 3).map((tab) => (
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+              className={`sf-nav-item${activeTab === tab.key ? ' active' : ''}`}>
+              <span>{tab.icon}</span> {tab.label}
+            </button>
+          ))}
+          <div style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1.2px', color: 'var(--text-dim)', margin: '16px 0 10px', padding: '0 12px' }}>
+            Account
+          </div>
+          {tabs.slice(3).map((tab) => (
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+              className={`sf-nav-item${activeTab === tab.key ? ' active' : ''}`}>
+              <span>{tab.icon}</span> {tab.label}
             </button>
           ))}
         </nav>
 
-        <main style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+        <main style={{ flex: 1, padding: '28px 32px', overflowY: 'auto', background: 'var(--bg)' }}>
           {renderContent()}
         </main>
       </div>

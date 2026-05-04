@@ -29,47 +29,55 @@ export const Plans: React.FC = () => {
 
   return (
     <div>
-      <h2>Subscription Plans</h2>
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-      {loading && <div>Loading...</div>}
+      <div className="sf-page-header" style={{ marginBottom: '32px' }}>
+        <h2 className="sf-page-title">💎 Subscription Plans</h2>
+      </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-        {plans.map((plan) => (
-          <div
-            key={plan.planId}
-            style={{
-              border: plan.active ? '2px solid #28a745' : '2px solid #ddd',
-              borderRadius: '8px',
-              padding: '20px',
-              background: plan.active ? 'white' : '#f5f5f5',
-              opacity: plan.active ? 1 : 0.7,
-            }}
-          >
-            <h3 style={{ marginTop: 0, color: '#007bff' }}>{plan.name}</h3>
-            <div style={{ fontSize: '32px', fontWeight: 'bold', margin: '15px 0' }}>
-              {plan.price} {plan.currency}
-            </div>
-            <p style={{ color: '#666', marginBottom: '15px' }}>{plan.description}</p>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '15px' }}>
-              {plan.active ? (
-                <span style={{ color: 'green', fontWeight: 'bold' }}>✓ Available</span>
-              ) : (
-                <span style={{ color: '#aaa', fontWeight: 'bold' }}>✗ Unavailable</span>
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
+      {loading && <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+        {plans.map((plan) => {
+          const isMyPlan = myPlanId === plan.planId;
+          return (
+            <div key={plan.planId} style={{
+              background: 'var(--surface-2)',
+              border: `2px solid ${isMyPlan ? 'var(--accent)' : plan.active ? 'var(--border)' : 'var(--border)'}`,
+              borderRadius: '16px',
+              padding: '28px 24px',
+              opacity: plan.active ? 1 : 0.5,
+              position: 'relative',
+              boxShadow: isMyPlan ? '0 0 24px rgba(99,102,241,0.2)' : 'none',
+            }}>
+              {isMyPlan && (
+                <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)' }}>
+                  <span className="sf-badge sf-badge-primary">✓ Your Plan</span>
+                </div>
               )}
-              {myPlanId === plan.planId && (
-                <span style={{ background: '#007bff', color: 'white', fontSize: '11px', fontWeight: 'bold', padding: '2px 8px', borderRadius: '12px' }}>
-                  YOUR PLAN
+              <h3 style={{ fontSize: '18px', fontWeight: '700', color: isMyPlan ? 'var(--accent-light)' : 'var(--text)', marginBottom: '16px' }}>
+                {plan.name}
+              </h3>
+              <div style={{ fontSize: '36px', fontWeight: '800', color: 'var(--text)', marginBottom: '4px', lineHeight: 1 }}>
+                {plan.price}
+                <span style={{ fontSize: '16px', fontWeight: '400', color: 'var(--text-muted)', marginLeft: '4px' }}>
+                  {plan.currency}/mo
                 </span>
-              )}
+              </div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px', margin: '16px 0', lineHeight: '1.5' }}>
+                {plan.description}
+              </p>
+              <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+                {plan.active
+                  ? <span className="sf-badge sf-badge-success">✓ Available</span>
+                  : <span className="sf-badge sf-badge-danger">✗ Unavailable</span>}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {!loading && plans.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          No plans available
-        </div>
+        <div className="sf-empty">💎 No plans available</div>
       )}
     </div>
   );

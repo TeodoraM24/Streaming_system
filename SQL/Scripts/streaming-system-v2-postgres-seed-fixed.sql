@@ -50,7 +50,7 @@ INSERT INTO payment (payment_id, price, currency, created_at, status, subscripti
 (2, 99.00, 'DKK', NOW() - INTERVAL '1 days',  'FAILED', 1, 2);
 
 INSERT INTO receipt (receipt_id, receipt_number, price, paydate, payment_payment_id) VALUES
-(1, 'R-1000001', 99.00, NOW() - INTERVAL '20 days', 1);
+(1, '123456789123', 99.00, NOW() - INTERVAL '20 days', 1);
 
 -- =========================================================
 -- CONTENT + MOVIES + SHOWS + SEASONS + EPISODES

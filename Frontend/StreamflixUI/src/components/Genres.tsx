@@ -46,86 +46,78 @@ export const Genres: React.FC = () => {
     if (selectedGenre) loadContent(selectedGenre.genreId, tab);
   };
 
-  const tabBtn = (tab: ContentTab): React.CSSProperties => ({
-    padding: '8px 20px',
-    cursor: 'pointer',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    background: activeTab === tab ? '#007bff' : 'white',
-    color: activeTab === tab ? 'white' : '#333',
-    fontWeight: activeTab === tab ? 'bold' : 'normal',
-  });
-
   return (
     <div>
-      {/* ── Header row: title left, tab buttons right ── */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2 style={{ margin: 0 }}>
-          Genres{selectedGenre ? ` — ${selectedGenre.genrename}` : ''}
+      <div className="sf-page-header">
+        <h2 className="sf-page-title">
+          🎭 Genres{selectedGenre ? ` — ${selectedGenre.genrename}` : ''}
         </h2>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => switchTab('movies')} style={tabBtn('movies')}>
+        <div className="sf-filter-bar">
+          <button onClick={() => switchTab('movies')}
+            className={`sf-btn sf-btn-filter${activeTab === 'movies' ? ' active' : ''}`}>
             🎬 Movies
           </button>
-          <button onClick={() => switchTab('shows')} style={tabBtn('shows')}>
+          <button onClick={() => switchTab('shows')}
+            className={`sf-btn sf-btn-filter${activeTab === 'shows' ? ' active' : ''}`}>
             📺 Shows
           </button>
         </div>
       </div>
 
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
 
-      {/* ── Genre filter grid ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '10px', marginBottom: '28px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '8px', marginBottom: '28px' }}>
         {genres.map((genre) => (
-          <button
-            key={genre.genreId}
-            onClick={() => selectGenre(genre)}
-            style={{
-              padding: '12px',
-              cursor: 'pointer',
-              background: selectedGenre?.genreId === genre.genreId ? '#007bff' : 'white',
-              color: selectedGenre?.genreId === genre.genreId ? 'white' : '#333',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: selectedGenre?.genreId === genre.genreId ? 'bold' : 'normal',
-            }}
-          >
+          <button key={genre.genreId} onClick={() => selectGenre(genre)}
+            className={`sf-genre-pill${selectedGenre?.genreId === genre.genreId ? ' active' : ''}`}>
             {genre.genrename}
           </button>
         ))}
       </div>
 
-      {/* ── Content grid ── */}
-      {loading && <div>Loading...</div>}
+      {loading && <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>}
 
       {selectedGenre && !loading && (
         <>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
             {content.map((item, index) => (
               <div key={item.contentId || item.movieId || item.showId || index}
-                style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', background: 'white' }}>
-                <h4 style={{ marginTop: 0 }}>{item.title || item.originaltitle || 'Untitled'}</h4>
-                {item.rating !== undefined && <p style={{ margin: '4px 0' }}><strong>Rating:</strong> {item.rating}/10</p>}
-                {item.duration && <p style={{ margin: '4px 0' }}><strong>Duration:</strong> {item.duration} min</p>}
-                {item.releasedate && <p style={{ margin: '4px 0' }}><strong>Release:</strong> {item.releasedate}</p>}
-                {item.description && <p style={{ fontSize: '13px', color: '#666', margin: '8px 0' }}>{item.description}</p>}
-                <button
-                  onClick={() => setPlayingContent(item)}
-                  style={{ width: '100%', padding: '10px', marginTop: '8px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '15px', fontWeight: 'bold' }}
-                >
-                  ▶️ Play
+                className="sf-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
+                  <h4 style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text)', lineHeight: '1.4' }}>
+                    {item.title || item.originaltitle || 'Untitled'}
+                  </h4>
+                  {item.rating !== undefined && (
+                    <span className="sf-rating" style={{ flexShrink: 0 }}>⭐ {Number(item.rating).toFixed(1)}</span>
+                  )}
+                </div>
+                <div style={{ display: 'flex', gap: '12px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  {item.duration && <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>🕐 {item.duration} min</span>}
+                  {item.releasedate && <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>📅 {item.releasedate}</span>}
+                </div>
+                {item.description && (
+                  <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5', flex: 1, marginBottom: '14px',
+                    display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {item.description}
+                  </p>
+                )}
+                <button onClick={() => setPlayingContent(item)} className="sf-btn sf-btn-primary"
+                  style={{ width: '100%', marginTop: 'auto' }}>
+                  ▶ Play
                 </button>
               </div>
             ))}
           </div>
           {content.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-              No {activeTab} found for {selectedGenre.genrename}
+            <div className="sf-empty">
+              No {activeTab} found for <strong>{selectedGenre.genrename}</strong>
             </div>
           )}
         </>
+      )}
+
+      {!selectedGenre && !loading && (
+        <div className="sf-empty">👆 Select a genre above to browse {activeTab}</div>
       )}
 
       {playingContent && (

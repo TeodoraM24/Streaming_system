@@ -39,51 +39,49 @@ export const Reviews: React.FC = () => {
     loadData();
   }, []);
 
-  const ratingColor = (rating: number) => {
-    if (rating >= 7) return '#28a745';
-    if (rating >= 4) return '#fd7e14';
-    return '#dc3545';
-  };
+  const ratingBadgeColor = (r: number) => r >= 7 ? 'var(--success)' : r >= 4 ? 'var(--warning)' : 'var(--danger)';
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>Reviews</h2>
-        <span style={{ color: '#666', fontSize: '14px' }}>
-          To write a review, go to Movies or Shows and click "Write Review" on a card
+      <div className="sf-page-header">
+        <h2 className="sf-page-title">⭐ Reviews</h2>
+        <span style={{ color: 'var(--text-muted)', fontSize: '13px' }}>
+          Go to Movies or Shows and click "Review" to write one
         </span>
       </div>
 
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-      {loading && <div>Loading...</div>}
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
+      {loading && <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>}
 
-      <div style={{ display: 'grid', gap: '16px' }}>
+      <div style={{ display: 'grid', gap: '12px' }}>
         {reviews.map((review) => (
-          <div key={review.reviewId} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '18px', background: 'white' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-              <div>
-                <h3 style={{ margin: '0 0 4px 0' }}>{review.title}</h3>
+          <div key={review.reviewId} className="sf-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+              <div style={{ minWidth: 0 }}>
+                <h3 style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text)', marginBottom: '6px' }}>
+                  {review.title}
+                </h3>
                 {review.contentId && (
                   <span style={{
-                    display: 'inline-block', fontSize: '13px', color: '#007bff',
-                    background: '#e8f0fe', padding: '2px 10px', borderRadius: '12px',
+                    display: 'inline-block', fontSize: '12px', color: 'var(--accent-light)',
+                    background: 'rgba(99,102,241,0.12)', padding: '2px 10px', borderRadius: '12px',
                   }}>
                     🎬 {contentMap[review.contentId] || `Content #${review.contentId}`}
                   </span>
                 )}
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0, marginLeft: '12px' }}>
-                <span style={{
-                  background: ratingColor(review.rating), color: 'white',
-                  padding: '4px 10px', borderRadius: '4px', fontSize: '14px', fontWeight: 'bold',
-                }}>
-                  ⭐ {review.rating}/10
-                </span>
-              </div>
+              <span style={{
+                background: ratingBadgeColor(review.rating), color: 'white', flexShrink: 0,
+                padding: '4px 12px', borderRadius: '8px', fontSize: '13px', fontWeight: '700',
+              }}>
+                ⭐ {review.rating}/10
+              </span>
             </div>
-            <p style={{ color: '#333', margin: '10px 0 6px 0' }}>{review.comment}</p>
+            <p style={{ color: 'var(--text)', margin: '12px 0 8px 0', fontSize: '14px', lineHeight: '1.6' }}>
+              {review.comment}
+            </p>
             {review.createdAt && (
-              <span style={{ color: '#aaa', fontSize: '12px' }}>
+              <span style={{ color: 'var(--text-dim)', fontSize: '12px' }}>
                 {new Date(review.createdAt).toLocaleDateString()}
               </span>
             )}
@@ -92,9 +90,7 @@ export const Reviews: React.FC = () => {
       </div>
 
       {!loading && reviews.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          No reviews yet. Go to Movies or Shows to write one!
-        </div>
+        <div className="sf-empty">⭐ No reviews yet. Go to Movies or Shows to write one!</div>
       )}
     </div>
   );

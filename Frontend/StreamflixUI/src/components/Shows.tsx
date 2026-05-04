@@ -48,47 +48,50 @@ export const Shows: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>TV Shows</h2>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={() => { setShowTopRated(false); loadShows(); }} style={{ padding: '8px 16px', cursor: 'pointer' }}>
+      <div className="sf-page-header">
+        <h2 className="sf-page-title">
+          📺 {showTopRated ? 'Top Rated Shows' : 'TV Shows'}
+        </h2>
+        <div className="sf-filter-bar">
+          <button onClick={() => { setShowTopRated(false); loadShows(); }}
+            className={`sf-btn sf-btn-filter${!showTopRated ? ' active' : ''}`}>
             All Shows
           </button>
-          <button onClick={loadTopShows} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-            Top Rated
+          <button onClick={loadTopShows}
+            className={`sf-btn sf-btn-filter${showTopRated ? ' active' : ''}`}>
+            ⭐ Top Rated
           </button>
         </div>
       </div>
 
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
-      {loading && <div>Loading...</div>}
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
+      {loading && <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
         {displayShows.map((show) => (
-          <div key={show.contentId || show.showId} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', background: 'white', position: 'relative' }}>
-            <h3 style={{ marginTop: 0 }}>{show.title || show.originaltitle || 'Untitled'}</h3>
-            {show.rating !== undefined && <p><strong>Rating:</strong> {show.rating}/10</p>}
-            {show.releasedate && <p><strong>Release:</strong> {show.releasedate}</p>}
-            {show.description && <p style={{ fontSize: '14px', color: '#666' }}>{show.description}</p>}
-            <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-              <button
-                onClick={() => setPlayingShow(show)}
-                style={{
-                  flex: 1, padding: '10px', backgroundColor: '#007bff',
-                  color: 'white', border: 'none', borderRadius: '4px',
-                  cursor: 'pointer', fontSize: '15px', fontWeight: 'bold',
-                }}
-              >
-                ▶️ Play
+          <div key={show.contentId || show.showId} className="sf-card" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ marginBottom: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+              <h3 style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.4', color: 'var(--text)' }}>
+                {show.title || show.originaltitle || 'Untitled'}
+              </h3>
+              {show.rating !== undefined && (
+                <span className="sf-rating" style={{ flexShrink: 0 }}>⭐ {Number(show.rating).toFixed(1)}</span>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '10px', flexWrap: 'wrap' }}>
+              {show.releasedate && <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>📅 {show.releasedate}</span>}
+            </div>
+            {show.description && (
+              <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5', flex: 1, marginBottom: '14px',
+                display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                {show.description}
+              </p>
+            )}
+            <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+              <button onClick={() => setPlayingShow(show)} className="sf-btn sf-btn-primary" style={{ flex: 1 }}>
+                ▶ Play
               </button>
-              <button
-                onClick={() => setReviewingShow(show)}
-                style={{
-                  flex: 1, padding: '10px', backgroundColor: '#28a745',
-                  color: 'white', border: 'none', borderRadius: '4px',
-                  cursor: 'pointer', fontSize: '15px', fontWeight: 'bold',
-                }}
-              >
+              <button onClick={() => setReviewingShow(show)} className="sf-btn sf-btn-ghost" style={{ flex: 1 }}>
                 ⭐ Review
               </button>
             </div>
@@ -97,9 +100,7 @@ export const Shows: React.FC = () => {
       </div>
 
       {!loading && displayShows.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          No shows found
-        </div>
+        <div className="sf-empty">📺 No shows found</div>
       )}
 
       {playingShow && (

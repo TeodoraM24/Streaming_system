@@ -63,43 +63,41 @@ export const Profiles: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2>My Profiles</h2>
-        <button onClick={() => setShowCreateForm(!showCreateForm)} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-          {showCreateForm ? 'Cancel' : 'Create Profile'}
+      <div className="sf-page-header">
+        <h2 className="sf-page-title">👤 My Profiles</h2>
+        <button onClick={() => setShowCreateForm(!showCreateForm)}
+          className={`sf-btn ${showCreateForm ? 'sf-btn-ghost' : 'sf-btn-primary'}`}>
+          {showCreateForm ? '✕ Cancel' : '＋ New Profile'}
         </button>
       </div>
 
-      {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+      {error && <div className="sf-alert sf-alert-error">{error}</div>}
 
       {showCreateForm && (
-        <form onSubmit={handleCreateProfile} style={{ marginBottom: '20px', padding: '20px', background: 'white', border: '1px solid #ddd', borderRadius: '8px' }}>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px' }}>Profile Name:</label>
-            <input
-              type="text"
-              value={newProfileName}
+        <form onSubmit={handleCreateProfile} style={{ marginBottom: '24px', padding: '24px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: '14px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <label className="sf-label">Profile Name</label>
+            <input type="text" value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
-              required
-              style={{ width: '100%', padding: '8px', boxSizing: 'border-box' }}
-            />
+              required placeholder="e.g. Kids, Work..." className="sf-input" />
           </div>
-          <button type="submit" disabled={loading} style={{ padding: '8px 16px', cursor: 'pointer' }}>
-            {loading ? 'Creating...' : 'Create'}
+          <button type="submit" disabled={loading} className="sf-btn sf-btn-primary">
+            {loading ? 'Creating…' : 'Create Profile'}
           </button>
         </form>
       )}
 
-      {loading && <div>Loading...</div>}
+      {loading && <div style={{ color: 'var(--text-muted)', padding: '20px 0' }}>Loading…</div>}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '14px' }}>
         {profiles.map((profile) => (
-          <div key={profile.profileId} style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '15px', background: 'white' }}>
-            <h3 style={{ marginTop: 0 }}>{profile.profilename}</h3>
-            <button
-              onClick={() => handleDeleteProfile(profile.profileId)}
-              style={{ padding: '6px 12px', cursor: 'pointer', background: '#dc3545', color: 'white', border: 'none', borderRadius: '4px' }}
-            >
+          <div key={profile.profileId} className="sf-card" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div style={{ fontSize: '32px', textAlign: 'center' }}>👤</div>
+            <h3 style={{ textAlign: 'center', fontSize: '15px', fontWeight: '600', color: 'var(--text)' }}>
+              {profile.profilename}
+            </h3>
+            <button onClick={() => handleDeleteProfile(profile.profileId)}
+              className="sf-btn sf-btn-danger" style={{ width: '100%', marginTop: 'auto' }}>
               Delete
             </button>
           </div>
@@ -107,9 +105,7 @@ export const Profiles: React.FC = () => {
       </div>
 
       {!loading && profiles.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-          No profiles found. Create your first profile!
-        </div>
+        <div className="sf-empty">👤 No profiles yet. Create your first one!</div>
       )}
     </div>
   );
