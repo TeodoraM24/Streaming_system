@@ -68,7 +68,7 @@ class UserAccountRepositoryTest {
         Account account = new Account();
         account.setFirstname("Jane");
         account.setLastname("Doe");
-        account.setPhonenumber("12345678");
+        account.setPhonenumber("12345679");
         account.setMail(mail);
         return accountRepository.save(account);
     }
