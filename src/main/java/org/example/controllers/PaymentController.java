@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/payments")
-@PreAuthorize("hasRole('ADMIN')") // all payment operations are admin-only
+//@PreAuthorize("hasRole('ADMIN')") // all payment operations are admin-only
 public class PaymentController {
 
     @Autowired private PaymentRepository repository;

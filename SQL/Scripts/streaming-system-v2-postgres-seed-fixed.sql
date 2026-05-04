@@ -35,7 +35,7 @@ INSERT INTO lists (list_id, listname, profile_profile_id) VALUES
 
 INSERT INTO plan (plan_id, name, description, price, currency, active) VALUES
 (1, 'STANDARD', 'Standard plan', 99.00, 'DKK', TRUE),
-(2, 'PREMIUM',  'Premium plan', 129.00, 'DKK', TRUE);
+(2, 'PREMIUM',  'Premium plan', 999.00, 'DKK', TRUE);
 
 INSERT INTO subscription (subscription_id, startdate, enddate, next_bill_date, status, accounts_account_id, plan_plan_id) VALUES
 (1, CURRENT_DATE - 20, CURRENT_DATE + 10, CURRENT_DATE + 10, 'ACTIVE', 1, 1),
