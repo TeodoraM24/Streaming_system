@@ -23,7 +23,7 @@ public class AccountNode {
     private String password;
 
     @Relationship(type = "HAS_USER")
-    private Set<UserNode> users = new HashSet<>();
+    private UserNode user;
 
     @Relationship(type = "HAS_SUBSCRIPTION")
     private Set<SubscriptionNode> subscriptions = new HashSet<>();

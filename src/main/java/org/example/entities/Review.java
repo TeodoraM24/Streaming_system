@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,12 +28,18 @@ public class Review {
     @Column(name = "review_id")
     private Long reviewId;
 
+    @NotNull
+    @Size(min = 1, max = 60)
+    @Column(length = 60, nullable = false)
     private String title;
 
-    @Min(1) @Max(5)
+    @NotNull
+    @Min(1) @Max(10)
     private Short rating;
 
-    @Column(columnDefinition = "TEXT")
+    @NotNull
+    @Size(min = 1, max = 500)
+    @Column(length = 500, nullable = false)
     private String comment;
 
     @Column(name = "created_at")

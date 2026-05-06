@@ -5,6 +5,7 @@ import org.example.entities.*;
 import org.example.neo4j.nodes.*;
 import org.example.neo4j.repositories.*;
 import org.example.repositories.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "app.neo4j.migrations.enabled", havingValue = "true")
 public class MigrationService {
 
     // Postgres repositories
@@ -165,11 +167,10 @@ public class MigrationService {
     public void migrateAccountUserRelationships() {
         for (Account account : accountRepository.findAll()) {
             AccountNode accountNode = accountNeoRepository.findById(account.getAccountId()).orElse(null);
-            if (accountNode == null || account.getUsers() == null) continue;
+            if (accountNode == null || account.getUser() == null) continue;  // single user now
 
-            for (User user : account.getUsers()) {
-                userNeoRepository.findById(user.getUsersId()).ifPresent(accountNode.getUsers()::add);
-            }
+            userNeoRepository.findById(account.getUser().getUsersId())
+                    .ifPresent(accountNode::setUser);                        // setUser, not getUsers()::add
 
             accountNeoRepository.save(accountNode);
         }

@@ -8,6 +8,7 @@ import org.example.entities.Profile;
 import org.example.repositories.ListsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,19 +23,25 @@ public class ListsController {
     @Autowired private ListsRepository listsRepository;
     @Autowired private EntityManager entityManager;
 
+    // ADMIN-only: listing all lists exposes other users' data
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ListsDTO> getAll() {
         return listsRepository.findAll().stream().map(ListsDTO::convertToDTO).toList();
     }
 
+    // ADMIN-only: viewing any list by ID without ownership check
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ListsDTO getById(@PathVariable Long id) {
         return listsRepository.findById(id).map(ListsDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    // USER: create a list — ownership is established via profileId in the DTO
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('USER')")
     public ListsDTO create(@RequestBody ListsDTO dto) {
         Lists entity = new Lists(dto);
         if (dto.getProfileId() != null) {
@@ -44,7 +51,9 @@ public class ListsController {
         return ListsDTO.convertToDTO(listsRepository.save(entity));
     }
 
+    // USER + owns: user may only update their own list
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER') and @listOwnershipService.isOwner(#id, authentication.name) or hasRole('ADMIN')")
     public ListsDTO update(@PathVariable Long id, @RequestBody ListsDTO dto) {
         Lists entity = listsRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -56,7 +65,9 @@ public class ListsController {
         return ListsDTO.convertToDTO(listsRepository.save(entity));
     }
 
+    // USER + owns: user may only patch their own list
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('USER') and @listOwnershipService.isOwner(#id, authentication.name) or hasRole('ADMIN')")
     public ListsDTO patch(@PathVariable Long id, @RequestBody ListsDTO dto) {
         Lists entity = listsRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -68,8 +79,10 @@ public class ListsController {
         return ListsDTO.convertToDTO(listsRepository.save(entity));
     }
 
+    // USER + owns: user may only delete their own list
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('USER') and @listOwnershipService.isOwner(#id, authentication.name) or hasRole('ADMIN')")
     public void delete(@PathVariable Long id) {
         listsRepository.deleteById(id);
     }

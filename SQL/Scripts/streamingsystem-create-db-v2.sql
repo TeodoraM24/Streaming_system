@@ -93,9 +93,9 @@ CREATE TABLE episode (
 -- REVIEW
 CREATE TABLE review (
     review_id BIGSERIAL PRIMARY KEY,
-    title VARCHAR(120),
-    rating SMALLINT CHECK (rating BETWEEN 1 AND 5),
-    comment TEXT,
+    title VARCHAR(60) NOT NULL,
+    rating SMALLINT NOT NULL CHECK (rating BETWEEN 1 AND 10),
+    comment VARCHAR(500) NOT NULL,
     created_at TIMESTAMP,
     profile_profile_id BIGINT
         REFERENCES profile(profile_id) ON DELETE CASCADE,

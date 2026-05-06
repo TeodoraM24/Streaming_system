@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dtos.UserDTO;
+import org.example.enums.Role;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "users")
@@ -24,9 +27,14 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "accounts_account_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "accounts_account_id", unique = true)
     private Account account;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(columnDefinition = "user_role")
+    private Role role;
 
     public User(UserDTO dto) {
         this.usersId = dto.getUsersId();
