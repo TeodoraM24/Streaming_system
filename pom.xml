@@ -18,6 +18,12 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+
+        <sonar.projectKey>TeodoraM24_Streaming_system</sonar.projectKey>
+        <sonar.organization>teodoram24</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+
         <java.version>21</java.version>
 
         <!-- Keep custom versions where needed -->
