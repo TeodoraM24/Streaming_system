@@ -25,7 +25,11 @@ jobs:
           distribution: 'zulu'
           cache: 'maven'
 
-      # 3. Cache SonarQube packages
+      # 3. Set up Docker for Testcontainers
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 4. Cache SonarQube packages
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
@@ -33,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # 4. Build, test AND SonarCloud analysis (samlet!)
+      # 5. Build, test AND SonarCloud analysis (samlet!)
       - name: Build, test and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
