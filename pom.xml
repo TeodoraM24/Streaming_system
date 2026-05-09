@@ -18,7 +18,16 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+
+        <sonar.projectKey>TeodoraM24_Streaming_system</sonar.projectKey>
+        <sonar.organization>teodoram24</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+
         <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <!-- Keep custom versions where needed -->
         <hibernate-version>6.5.2.Final</hibernate-version>
@@ -163,14 +172,16 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+            <!-- FIXED Surefire -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <!-- Avoid "kill self fork JVM" hangs with Testcontainers on Windows -->
-                    <forkCount>0</forkCount>
+                    <!-- FIX: JaCoCo injection -->
+                    <argLine>@{argLine} -Xmx1024m</argLine>
                 </configuration>
             </plugin>
+
 
             <!-- JaCoCo -->
             <plugin>
@@ -179,6 +190,7 @@
                 <version>0.8.11</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
@@ -191,6 +203,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/config/**</exclude>
+                        <exclude>**/dto/**</exclude>
+                        <exclude>**/Application.class</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
 
         </plugins>

@@ -25,7 +25,11 @@ jobs:
           distribution: 'zulu'
           cache: 'maven'
 
-      # 3. Cache SonarQube packages
+      # 3. Set up Docker for Testcontainers
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 4. Cache SonarQube packages
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
@@ -33,9 +37,10 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      # 4. Build and run tests (Testcontainers spins up PostgreSQL automatically)
-      - name: Build and test with Maven
+      # 5. Build, test AND SonarCloud analysis (samlet!)
+      - name: Build, test and analyze
         env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_EXPIRATION: 86400000
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/dummy
@@ -44,16 +49,9 @@ jobs:
           SPRING_JPA_HIBERNATE_DDL_AUTO: none
           SPRING_NEO4J_URI: bolt://localhost:7687
           SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/dummy
-        run: mvn --batch-mode clean verify
-
-      # 5. SonarCloud analysis
-      - name: SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn sonar:sonar \
+          mvn --batch-mode clean verify sonar:sonar \
             -Dsonar.projectKey=TeodoraM24_Streaming_system \
             -Dsonar.organization=teodoram24 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
