@@ -46,7 +46,7 @@ jobs:
           SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/dummy
         run: mvn --batch-mode clean verify
 
-      # 5. SonarCloud analysis
+      # 5. SonarCloud analysiss
       - name: SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
