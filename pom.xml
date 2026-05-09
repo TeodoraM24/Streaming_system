@@ -197,16 +197,10 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <formats>
-                                <format>XML</format>
-                                <format>HTML</format>
-                            </formats>
-                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
