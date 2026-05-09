@@ -59,7 +59,7 @@ export const Register: React.FC<{ onSwitchToLogin: () => void }> = ({ onSwitchTo
             </div>
             {field('Username', 'username', 'text', 'johndoe')}
             {field('Email', 'mail', 'email', 'john@example.com')}
-            {field('Phone Number', 'phonenumber', 'tel', '+45 12 34 56 78')}
+            {field('Phone Number', 'phonenumber', 'tel', '12345678')}
             {field('Password', 'password', 'password', 'Min. 8 characters')}
             {error && <div className="sf-alert sf-alert-error">{error}</div>}
             <button type="submit" disabled={loading} className="sf-btn sf-btn-primary"

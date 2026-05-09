@@ -8,6 +8,7 @@ import org.example.entities.Receipt;
 import org.example.entities.Subscription;
 import org.example.repositories.PaymentRepository;
 import org.example.repositories.ReceiptRepository;
+import org.example.services.ReceiptValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +26,7 @@ public class PaymentController {
     @Autowired private PaymentRepository repository;
     @Autowired private ReceiptRepository receiptRepository;
     @Autowired private EntityManager entityManager;
+    @Autowired private ReceiptValidation receiptValidation;
 
     @GetMapping
     public List<PaymentDTO> getAll() {
@@ -50,6 +52,8 @@ public class PaymentController {
         receipt.setPrice(savedPayment.getPrice());
         receipt.setPaydate(LocalDateTime.now());
         receipt.setReceiptNumber(String.valueOf(System.currentTimeMillis()));
+        receiptValidation.validateReceiptNumber(receipt.getReceiptNumber());
+        receiptValidation.validateReceiptPrice(receipt.getPrice());
         receiptRepository.save(receipt);
 
         return PaymentDTO.convertToDTO(savedPayment);
