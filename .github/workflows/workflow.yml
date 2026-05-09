@@ -50,5 +50,4 @@ jobs:
             -Dsonar.projectKey=TeodoraM24_Streaming_system \
             -Dsonar.organization=teodoram24 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}

@@ -22,7 +22,7 @@
         <sonar.projectKey>TeodoraM24_Streaming_system</sonar.projectKey>
         <sonar.organization>teodoram24</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
         <java.version>21</java.version>
 
