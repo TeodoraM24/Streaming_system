@@ -10,6 +10,7 @@ interface VideoPlayerProps {
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({ title, type, duration, onClose }) => {
   return (
     <div
+      data-testid="video-player"
       style={{
         position: 'fixed',
         top: 0,
@@ -105,6 +106,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ title, type, duration,
           
           <button
             onClick={onClose}
+            data-testid="video-player-close"
             style={{
               padding: '8px 20px',
               backgroundColor: '#dc3545',

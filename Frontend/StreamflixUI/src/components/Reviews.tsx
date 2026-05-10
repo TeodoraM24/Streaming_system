@@ -55,14 +55,14 @@ export const Reviews: React.FC = () => {
 
       <div style={{ display: 'grid', gap: '12px' }}>
         {reviews.map((review) => (
-          <div key={review.reviewId} className="sf-card">
+          <div key={review.reviewId} className="sf-card" data-testid="review-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
               <div style={{ minWidth: 0 }}>
-                <h3 style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text)', marginBottom: '6px' }}>
+                <h3 data-testid="review-title" style={{ fontSize: '15px', fontWeight: '600', color: 'var(--text)', marginBottom: '6px' }}>
                   {review.title}
                 </h3>
                 {review.contentId && (
-                  <span style={{
+                  <span data-testid="review-content" style={{
                     display: 'inline-block', fontSize: '12px', color: 'var(--accent-light)',
                     background: 'rgba(99,102,241,0.12)', padding: '2px 10px', borderRadius: '12px',
                   }}>
@@ -70,14 +70,14 @@ export const Reviews: React.FC = () => {
                   </span>
                 )}
               </div>
-              <span style={{
+              <span data-testid="review-rating" style={{
                 background: ratingBadgeColor(review.rating), color: 'white', flexShrink: 0,
                 padding: '4px 12px', borderRadius: '8px', fontSize: '13px', fontWeight: '700',
               }}>
                 ⭐ {review.rating}/10
               </span>
             </div>
-            <p style={{ color: 'var(--text)', margin: '12px 0 8px 0', fontSize: '14px', lineHeight: '1.6' }}>
+            <p data-testid="review-comment" style={{ color: 'var(--text)', margin: '12px 0 8px 0', fontSize: '14px', lineHeight: '1.6' }}>
               {review.comment}
             </p>
             {review.createdAt && (

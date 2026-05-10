@@ -48,6 +48,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ contentId, contentTitl
 
   return (
     <div
+      data-testid="review-modal"
       style={{
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
         backgroundColor: 'rgba(0,0,0,0.75)', zIndex: 1000,
@@ -75,7 +76,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ contentId, contentTitl
             <label className="sf-label">Profile</label>
             <select value={formData.profileId}
               onChange={(e) => setFormData({ ...formData, profileId: e.target.value })}
-              required className="sf-input">
+              required className="sf-input" data-testid="review-profile-select">
               <option value="">— Select a profile —</option>
               {profiles.map((p) => (
                 <option key={p.profileId} value={p.profileId}>{p.profilename}</option>
@@ -87,13 +88,14 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ contentId, contentTitl
             <label className="sf-label">Review Title</label>
             <input type="text" value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              required placeholder="e.g. Amazing film!" className="sf-input" />
+              required placeholder="e.g. Amazing film!" className="sf-input" data-testid="review-title-input" />
           </div>
 
           <div style={{ marginBottom: '16px' }}>
             <label className="sf-label">Rating: {formData.rating}/10</label>
             <input type="range" min="1" max="10" value={formData.rating}
               onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })}
+              data-testid="review-rating-input"
               style={{ width: '100%', accentColor: 'var(--accent)', marginBottom: '4px' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-dim)' }}>
               <span>1</span><span>5</span><span>10</span>
@@ -105,11 +107,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({ contentId, contentTitl
             <textarea value={formData.comment}
               onChange={(e) => setFormData({ ...formData, comment: e.target.value })}
               required rows={4} placeholder="Share your thoughts..."
-              className="sf-input" style={{ resize: 'vertical', height: 'auto' }} />
+              className="sf-input" data-testid="review-comment-input" style={{ resize: 'vertical', height: 'auto' }} />
           </div>
 
           <div style={{ display: 'flex', gap: '10px' }}>
             <button type="submit" disabled={loading} className="sf-btn sf-btn-primary"
+              data-testid="review-submit"
               style={{ flex: 1, padding: '12px', fontSize: '14px' }}>
               {loading ? 'Submitting…' : '⭐ Submit Review'}
             </button>

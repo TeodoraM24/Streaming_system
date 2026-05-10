@@ -74,9 +74,12 @@ export const Movies: React.FC = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
         {displayMovies.map((movie) => (
-          <div key={movie.contentId || movie.movieId} className="sf-card" style={{ display: 'flex', flexDirection: 'column' }}>
+          <div key={movie.contentId || movie.movieId} className="sf-card" data-testid="movie-card" style={{ display: 'flex', flexDirection: 'column' }}>
+            <span data-testid="movie-card-content-id" style={{ display: 'none' }}>
+              {movie.contentId}
+            </span>
             <div style={{ marginBottom: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
-              <h3 style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.4', color: 'var(--text)' }}>
+              <h3 data-testid="movie-card-title" style={{ fontSize: '15px', fontWeight: '600', lineHeight: '1.4', color: 'var(--text)' }}>
                 {movie.title || movie.originaltitle || 'Untitled'}
               </h3>
               {movie.rating !== undefined && (
@@ -97,7 +100,7 @@ export const Movies: React.FC = () => {
               <button onClick={() => setPlayingMovie(movie)} className="sf-btn sf-btn-primary" style={{ flex: 1 }}>
                 ▶ Play
               </button>
-              <button onClick={() => setReviewingMovie(movie)} className="sf-btn sf-btn-ghost" style={{ flex: 1 }}>
+              <button onClick={() => setReviewingMovie(movie)} className="sf-btn sf-btn-ghost" data-testid="movie-card-review" style={{ flex: 1 }}>
                 ⭐ Review
               </button>
             </div>
