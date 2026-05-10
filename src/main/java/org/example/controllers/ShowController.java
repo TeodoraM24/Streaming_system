@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import jakarta.persistence.EntityManager;
+import org.example.dtos.ShowDetailsDTO;
 import org.example.dtos.ShowDTO;
 import org.example.dtos.ShowResponseDTO;
 import org.example.entities.Content;
@@ -33,9 +34,8 @@ public class ShowController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ShowDTO getById(@PathVariable Long id) {
-        return repository.findById(id).map(ShowDTO::convertToDTO)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public ShowDetailsDTO getById(@PathVariable Long id) {
+        return showService.getShowDetails(id);
     }
 
     @GetMapping("/genre/{genreId}")

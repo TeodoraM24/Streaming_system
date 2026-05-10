@@ -25,6 +25,7 @@ public class Show {
     private Content content;
 
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("seasonId ASC")
     private List<Season> seasons;
 
 

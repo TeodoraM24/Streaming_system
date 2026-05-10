@@ -1,10 +1,14 @@
 package org.example.services;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dtos.ShowDetailsDTO;
 import org.example.dtos.ShowResponseDTO;
 import org.example.entities.Content;
 import org.example.repositories.ShowRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -13,6 +17,13 @@ import java.util.List;
 public class ShowService {
 
     private final ShowRepository showRepository;
+
+    @Transactional(readOnly = true)
+    public ShowDetailsDTO getShowDetails(Long id) {
+        return showRepository.findWithSeasonsByShowsId(id)
+                .map(ShowDetailsDTO::convertToDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
 
     public List<ShowResponseDTO> getTop10RatedShows() {
 

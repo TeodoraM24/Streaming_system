@@ -28,6 +28,7 @@ public class Season {
     private Show show;
 
     @OneToMany(mappedBy = "season")
+    @OrderBy("episodeId ASC")
     private List<Episode> episodes;
 
     // Conversion Constructor
