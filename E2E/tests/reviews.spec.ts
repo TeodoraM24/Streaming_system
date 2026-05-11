@@ -6,7 +6,6 @@ const TEST_USER = {
 };
 
 const REVIEW_RATING = '5';
-const API_BASE_URL = 'http://localhost:8081/api';
 
 function unique_review_data() {
   const suffix = `${Date.now()}-${Math.floor(Math.random() * 100000)}`;
@@ -50,9 +49,43 @@ async function go_to_reviews(page: Page) {
   await expect(page.getByText(/loading/i)).not.toBeVisible({ timeout: 15_000 });
 }
 
+async function ensure_profile_exists(page: Page) {
+  // Check if the account has at least one profile, create one if not.
+  const hasProfile = await page.evaluate(async () => {
+    const apiBaseUrl = (window as any).import?.meta?.env?.VITE_API_URL || 'http://localhost:8081/api';
+    const token = localStorage.getItem('token');
+    const headers = { 
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
+
+    const profilesResponse = await fetch(`${apiBaseUrl}/profiles/me`, { headers });
+    const profiles = await profilesResponse.json();
+
+    if (profiles.length === 0) {
+      // Create a default profile for testing (accountId is required by the backend)
+      const accountId = Number(localStorage.getItem('accountId'));
+      await fetch(`${apiBaseUrl}/profiles`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ profilename: 'TestProfile', accountId })
+      });
+      return false;
+    }
+    return true;
+  });
+
+  if (!hasProfile) {
+    // Wait a moment for the profile creation to complete
+    await page.waitForTimeout(1000);
+  }
+}
+
 async function get_reviewed_content_ids_for_test_profile(page: Page) {
   // Read existing reviews so the test does not choose content already reviewed by the test profile.
-  return page.evaluate(async (apiBaseUrl) => {
+  return page.evaluate(async () => {
+    // Read API base URL from the frontend's environment (same as api.ts uses)
+    const apiBaseUrl = (window as any).import?.meta?.env?.VITE_API_URL || 'http://localhost:8081/api';
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
 
@@ -63,16 +96,17 @@ async function get_reviewed_content_ids_for_test_profile(page: Page) {
 
     const profiles = await profilesResponse.json();
     const reviews = await reviewsResponse.json();
-    const testProfile = profiles.find((profile: any) => profile.profilename === 'test');
+    const testProfile = profiles[0];
 
     if (!testProfile) {
-      throw new Error('Could not find profile named "test" for the logged-in account.');
+      // Return empty array if no profiles - the ensure_profile_exists should have created one
+      return [];
     }
 
     return reviews
       .filter((review: any) => review.profileId === testProfile.profileId)
       .map((review: any) => review.contentId);
-  }, API_BASE_URL);
+  });
 }
 
 async function find_unreviewed_movie_card(page: Page) {
@@ -91,7 +125,7 @@ async function find_unreviewed_movie_card(page: Page) {
     }
   }
 
-  throw new Error('The profile named "test" has already reviewed every visible movie.');
+  throw new Error('The first profile has already reviewed every visible movie.');
 }
 
 async function create_review_for_available_movie(page: Page, review: ReturnType<typeof unique_review_data>) {
@@ -105,12 +139,17 @@ async function create_review_for_available_movie(page: Page, review: ReturnType<
   await movie_card.getByTestId('movie-card-review').click();
   await expect(page.getByTestId('review-modal')).toBeVisible();
 
-  // Select the known test profile for the logged-in account.
+  // Select the first available profile for the logged-in account.
   const profile_select = page.getByTestId('review-profile-select');
   await expect
     .poll(async () => profile_select.locator('option').count(), { timeout: 15_000 })
     .toBeGreaterThan(1);
-  await profile_select.selectOption({ label: 'test' });
+  
+  // Get the first non-empty option value and select it
+  const firstProfileValue = await profile_select.locator('option').nth(1).getAttribute('value');
+  if (firstProfileValue) {
+    await profile_select.selectOption(firstProfileValue);
+  }
 
   // Fill in all required review fields.
   await page.getByTestId('review-title-input').fill(review.title);
@@ -130,6 +169,7 @@ test.describe('reviews', () => {
   test.beforeEach(async ({ page }) => {
     // Start every review test as a logged-in user on the Movies page.
     await login_user(page);
+    await ensure_profile_exists(page);
     await go_to_movies(page);
   });
 
