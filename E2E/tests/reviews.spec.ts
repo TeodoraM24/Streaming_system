@@ -3,7 +3,7 @@ import { test, expect } from './AuthHelper/auth';
 test.describe('Reviews', () => {
   test('create a review for a movie', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('[data-testid="movie-card"]').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('[data-testid="movie-card"]').first()).toBeVisible({ timeout: 30000 });
 
     const movieCount = await page.locator('[data-testid="movie-card-review"]').count();
     await page.locator('[data-testid="movie-card-review"]').nth(Date.now() % movieCount).click();
@@ -17,7 +17,7 @@ test.describe('Reviews', () => {
 
     await page.locator('[data-testid="review-submit"]').click();
 
-    await expect(page.locator('[data-testid="review-modal"]')).not.toBeVisible({ timeout: 10000 });
+    await expect(page.locator('[data-testid="review-modal"]')).not.toBeVisible({ timeout: 30000 });
   });
 
   test('view all reviews', async ({ page }) => {

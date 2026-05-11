@@ -1,4 +1,4 @@
-# Streamflix — Frontend
+npm# Streamflix — Frontend
 
 React + TypeScript + Vite frontend for the Streamflix streaming application.
 

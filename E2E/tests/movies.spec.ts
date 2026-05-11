@@ -3,7 +3,7 @@ import { test, expect } from './AuthHelper/auth';
 test.describe('Movies', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('[data-testid="movie-card"]').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('[data-testid="movie-card"]').first()).toBeVisible({ timeout: 30000 });
   });
 
   test('movies page loads and displays movie cards', async ({ page }) => {

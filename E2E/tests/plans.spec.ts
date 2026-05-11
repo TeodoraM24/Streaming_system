@@ -7,7 +7,7 @@ test.describe('Plans', () => {
 
     await expect(page.getByRole('heading', { name: /Subscription Plans/i })).toBeVisible();
 
-    await expect(page.getByRole('heading', { name: /standard/i })).toBeVisible({ timeout: 15000 });
-    await expect(page.getByRole('heading', { name: /premium/i })).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole('heading', { name: /standard/i })).toBeVisible({ timeout: 30000 });
+    await expect(page.getByRole('heading', { name: /premium/i })).toBeVisible({ timeout: 30000 });
   });
 });

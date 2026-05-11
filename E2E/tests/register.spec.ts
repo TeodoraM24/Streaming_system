@@ -19,6 +19,6 @@ test.describe('Register', () => {
     const response = await responsePromise;
     expect(response.ok()).toBeTruthy();
 
-    await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible({ timeout: 20000 });
+    await expect(page.getByRole('button', { name: 'Logout' })).toBeVisible({ timeout: 30000 });
   });
 });

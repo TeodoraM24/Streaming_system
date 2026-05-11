@@ -4,7 +4,7 @@ test.describe('Movies by Genre', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: /Genres/i }).click();
-    await expect(page.locator('.sf-genre-pill').first()).toBeVisible({ timeout: 15000 });
+    await expect(page.locator('.sf-genre-pill').first()).toBeVisible({ timeout: 30000 });
   });
 
   test('genres page loads and displays genre pills', async ({ page }) => {

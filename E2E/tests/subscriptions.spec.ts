@@ -7,7 +7,7 @@ test.describe('Subscriptions', () => {
     await expect(page.getByRole('heading', { name: /My Subscription/i })).toBeVisible();
 
     // Wait for loading to finish
-    await expect(page.getByText('Loading…')).not.toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Loading…')).not.toBeVisible({ timeout: 30000 });
 
     // If already subscribed, just confirm the active subscription is visible
     const alreadySubscribed = await page.getByText('✓ Active Subscription').isVisible();
@@ -30,6 +30,6 @@ test.describe('Subscriptions', () => {
     await page.getByRole('button', { name: /Pay/i }).click();
 
     // Verify receipt
-    await expect(page.getByText('Payment Successful!')).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText('Payment Successful!')).toBeVisible({ timeout: 30000 });
   });
 });

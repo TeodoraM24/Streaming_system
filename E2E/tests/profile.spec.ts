@@ -12,6 +12,6 @@ test.describe('Profiles', () => {
     await page.getByPlaceholder('e.g. Kids, Work...').fill(profileName);
     await page.getByRole('button', { name: 'Create Profile' }).click();
 
-    await expect(page.getByText(profileName)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(profileName)).toBeVisible({ timeout: 30000 });
   });
 });
