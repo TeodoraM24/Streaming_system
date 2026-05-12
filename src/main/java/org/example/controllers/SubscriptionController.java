@@ -27,7 +27,6 @@ public class SubscriptionController {
     @Autowired private UserRepository userRepository;
     @Autowired private EntityManager entityManager;
 
-    // USER: returns the subscription belonging to the authenticated user's account
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public SubscriptionDTO getMySubscription(@AuthenticationPrincipal UserDetails userDetails) {
@@ -40,14 +39,12 @@ public class SubscriptionController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No active subscription found"));
     }
 
-    // ADMIN-only: listing all subscriptions
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<SubscriptionDTO> getAll() {
         return repository.findAll().stream().map(SubscriptionDTO::convertToDTO).toList();
     }
 
-    // ADMIN-only: viewing any subscription by ID
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public SubscriptionDTO getById(@PathVariable Long id) {
@@ -55,41 +52,36 @@ public class SubscriptionController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
-    // USER: subscribe — ownership is tied to accountId in DTO
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     public SubscriptionDTO create(@RequestBody SubscriptionDTO dto) {
-
-        // 👉 HER
-        boolean hasActive = repository.findAll().stream()
-                .anyMatch(s -> s.getAccount().getAccountId().equals(dto.getAccountId())
-                        && s.getStatus() == SubscriptionStatus.ACTIVE);
+        boolean hasActive = repository.findByAccount_AccountId(dto.getAccountId())
+                .map(s -> s.getStatus() == SubscriptionStatus.ACTIVE)
+                .orElse(false);
 
         if (hasActive) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already has active subscription");
         }
 
-        // 👉 Derefter din normale kode
         Subscription entity = new Subscription();
-
         entity.setStartdate(LocalDate.now());
         entity.setEnddate(LocalDate.now().plusMonths(1));
         entity.setNextBillDate(LocalDate.now().plusMonths(1));
         entity.setStatus(SubscriptionStatus.ACTIVE);
-
         entity.setAccount(entityManager.getReference(Account.class, dto.getAccountId()));
         entity.setPlan(entityManager.getReference(Plan.class, dto.getPlanId()));
 
         return SubscriptionDTO.convertToDTO(repository.save(entity));
     }
 
-    // USER + owns or ADMIN
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER') and @subscriptionOwnershipService.isOwner(#id, authentication.name) or hasRole('ADMIN')")
-    public SubscriptionDTO update(@PathVariable Long id, @RequestBody SubscriptionDTO dto) {
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public SubscriptionDTO update(@PathVariable Long id, @RequestBody SubscriptionDTO dto,
+                                  @AuthenticationPrincipal UserDetails userDetails) {
         Subscription entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        verifyOwnership(entity, userDetails);
         entity.setStartdate(dto.getStartdate());
         entity.setEnddate(dto.getEnddate());
         entity.setNextBillDate(dto.getNextBillDate());
@@ -103,12 +95,13 @@ public class SubscriptionController {
         return SubscriptionDTO.convertToDTO(repository.save(entity));
     }
 
-    // USER + owns or ADMIN
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('USER') and @subscriptionOwnershipService.isOwner(#id, authentication.name) or hasRole('ADMIN')")
-    public SubscriptionDTO patch(@PathVariable Long id, @RequestBody SubscriptionDTO dto) {
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public SubscriptionDTO patch(@PathVariable Long id, @RequestBody SubscriptionDTO dto,
+                                 @AuthenticationPrincipal UserDetails userDetails) {
         Subscription entity = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        verifyOwnership(entity, userDetails);
         if (dto.getStartdate() != null) entity.setStartdate(dto.getStartdate());
         if (dto.getEnddate() != null) entity.setEnddate(dto.getEnddate());
         if (dto.getNextBillDate() != null) entity.setNextBillDate(dto.getNextBillDate());
@@ -122,11 +115,26 @@ public class SubscriptionController {
         return SubscriptionDTO.convertToDTO(repository.save(entity));
     }
 
-    // USER + owns or ADMIN
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('USER') and @subscriptionOwnershipService.isOwner(#id, authentication.name) or hasRole('ADMIN')")
-    public void delete(@PathVariable Long id) {
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public void delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        Subscription entity = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        verifyOwnership(entity, userDetails);
         repository.deleteById(id);
+    }
+
+    private void verifyOwnership(Subscription entity, UserDetails userDetails) {
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isAdmin) {
+            Long accountId = userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+                    .getAccount().getAccountId();
+            if (!entity.getAccount().getAccountId().equals(accountId)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+        }
     }
 }
