@@ -9,8 +9,9 @@ import { Reviews } from './Reviews';
 import { Plans } from './Plans';
 import { Subscriptions } from './Subscriptions';
 import { Receipts } from './Receipts';
+import { Jokes } from './Jokes';
 
-type Tab = 'movies' | 'shows' | 'genres' | 'account' | 'profiles' | 'reviews' | 'plans' | 'subscriptions' | 'receipts';
+type Tab = 'movies' | 'shows' | 'genres' | 'jokes' | 'account' | 'profiles' | 'reviews' | 'plans' | 'subscriptions' | 'receipts';
 
 export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('movies');
@@ -20,6 +21,7 @@ export const Dashboard: React.FC = () => {
     { key: 'movies', label: 'Movies', icon: '🎬' },
     { key: 'shows', label: 'TV Shows', icon: '📺' },
     { key: 'genres', label: 'Genres', icon: '🎭' },
+    { key: 'jokes', label: 'Jokes', icon: '😂' },
     { key: 'reviews', label: 'Reviews', icon: '⭐' },
     { key: 'profiles', label: 'Profiles', icon: '👤' },
     { key: 'account', label: 'Account', icon: '⚙️' },
@@ -36,6 +38,8 @@ export const Dashboard: React.FC = () => {
         return <Shows />;
       case 'genres':
         return <Genres />;
+      case 'jokes':
+        return <Jokes />;
       case 'account':
         return <Account />;
       case 'profiles':
@@ -94,7 +98,7 @@ export const Dashboard: React.FC = () => {
           <div style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1.2px', color: 'var(--text-dim)', marginBottom: '10px', padding: '0 12px' }}>
             Browse
           </div>
-          {tabs.slice(0, 3).map((tab) => (
+          {tabs.slice(0, 4).map((tab) => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={`sf-nav-item${activeTab === tab.key ? ' active' : ''}`}>
               <span>{tab.icon}</span> {tab.label}
@@ -103,7 +107,7 @@ export const Dashboard: React.FC = () => {
           <div style={{ fontSize: '10px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1.2px', color: 'var(--text-dim)', margin: '16px 0 10px', padding: '0 12px' }}>
             Account
           </div>
-          {tabs.slice(3).map((tab) => (
+          {tabs.slice(4).map((tab) => (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
               className={`sf-nav-item${activeTab === tab.key ? ' active' : ''}`}>
               <span>{tab.icon}</span> {tab.label}
