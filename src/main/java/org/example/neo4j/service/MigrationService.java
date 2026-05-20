@@ -56,6 +56,9 @@ public class MigrationService {
 
     @Transactional
     public void migrateAll() {
+        // sletter alt data før den kører migration
+        clearNeo4j();
+
         migrateAccounts();
         migrateUsers();
         migrateProfiles();
@@ -557,5 +560,28 @@ public class MigrationService {
         }
 
         return node;
+    }
+
+    private void clearNeo4j() {
+        receiptNeoRepository.deleteAll();
+        paymentNeoRepository.deleteAll();
+        paymentMethodNeoRepository.deleteAll();
+        subscriptionNeoRepository.deleteAll();
+        planNeoRepository.deleteAll();
+
+        reviewNeoRepository.deleteAll();
+        listsNeoRepository.deleteAll();
+        profileNeoRepository.deleteAll();
+        userNeoRepository.deleteAll();
+        accountNeoRepository.deleteAll();
+
+        episodeNeoRepository.deleteAll();
+        seasonNeoRepository.deleteAll();
+        showNeoRepository.deleteAll();
+        movieNeoRepository.deleteAll();
+        contentNeoRepository.deleteAll();
+
+        personnelNeoRepository.deleteAll();
+        genreNeoRepository.deleteAll();
     }
 }

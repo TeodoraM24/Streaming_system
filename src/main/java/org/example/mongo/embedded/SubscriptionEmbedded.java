@@ -1,21 +1,14 @@
-package org.example.mongo.documents;
+package org.example.mongo.embedded;
+
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "subscriptions")
-public class SubscriptionDocument {
-    @Id
-    private String id;
-
+public class SubscriptionEmbedded {
     private Long subscriptionId;
     private LocalDate startdate;
     private LocalDate enddate;
@@ -23,4 +16,7 @@ public class SubscriptionDocument {
     private String status;
     private Long accountId;
     private Long planId;
+
+    private PlanEmbedded plan;
+    private List<PaymentEmbedded> payments;
 }
