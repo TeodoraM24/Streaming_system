@@ -1,5 +1,5 @@
 -- =========================================================
--- DATABASE SCHEMA (WITH CASCADE BEST PRACTICES)
+-- DATABASE SCHEMA (WITH CASCADE BEST PRACTICES + USER ROLES)
 -- =========================================================
 
 -- ENUM TYPES
@@ -8,6 +8,7 @@ CREATE TYPE personnel_role AS ENUM ('ACTOR','DIRECTOR');
 CREATE TYPE subscription_status AS ENUM ('ACTIVE','PAUSED','CANCELLED','EXPIRED');
 CREATE TYPE payment_status AS ENUM ('PENDING','PAID','FAILED','REFUNDED');
 CREATE TYPE payment_type AS ENUM ('CARD','MOBILEPAY');
+CREATE TYPE user_role AS ENUM ('USER','ADMIN');
 
 -- ACCOUNTS
 CREATE TABLE accounts (
@@ -23,6 +24,7 @@ CREATE TABLE users (
     users_id BIGSERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
+    role user_role NOT NULL DEFAULT 'USER',
     accounts_account_id BIGINT NOT NULL
         REFERENCES accounts(account_id) ON DELETE CASCADE
 );

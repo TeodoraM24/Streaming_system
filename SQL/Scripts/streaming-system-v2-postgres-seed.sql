@@ -14,7 +14,7 @@ BEGIN;
 
 INSERT INTO accounts (account_id, firstname, lastname, phonenumber, mail) VALUES (1, 'Test', 'User', '12345678', 'testuser@example.com');
 
-INSERT INTO users (users_id, username, password, accounts_account_id) VALUES (1, 'testuser', '$2a$10$u1c5c0cQdK9ZxB2H0C8q1e5o9jvG2q5dWzqJfQqf9mQxqJf5cQ9l2', 1);
+INSERT INTO users (users_id, username, password, role, accounts_account_id) VALUES (1, 'testuser', '$2a$10$u1c5c0cQdK9ZxB2H0C8q1e5o9jvG2q5dWzqJfQqf9mQxqJf5cQ9l2', 'USER', 1);
 
 INSERT INTO profile (profile_id, profilename, accounts_account_id) VALUES
 (1, 'Umair', 1),
