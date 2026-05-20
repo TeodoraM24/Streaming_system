@@ -1,20 +1,13 @@
-package org.example.mongo.documents;
+package org.example.mongo.embedded;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "plans")
-public class PlanDocument {
-    @Id
-    private String id;
-
+public class PlanEmbedded {
     private Long planId;
     private String name;
     private String description;
