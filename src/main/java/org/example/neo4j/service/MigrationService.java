@@ -398,6 +398,7 @@ public class MigrationService {
         UserNode node = new UserNode();
         node.setId(user.getUsersId());
         node.setUsername(user.getUsername());
+        node.setRole(user.getRole());
         return node;
     }
 
