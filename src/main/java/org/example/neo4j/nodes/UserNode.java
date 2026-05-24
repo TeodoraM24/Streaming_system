@@ -3,6 +3,7 @@ package org.example.neo4j.nodes;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.enums.Role;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -20,6 +21,8 @@ public class UserNode {
     private Long id;
 
     private String username;
+
+    private Role role;
 
     @Relationship(type = "HAS_PROFILE")
     private Set<ProfileNode> profiles = new HashSet<>();

@@ -75,6 +75,7 @@ public class MongoMigrationService {
                             .usersId(account.getUser().getUsersId())
                             .username(account.getUser().getUsername())
                             .password(account.getUser().getPassword())
+                            .role(account.getUser().getRole())
                             .accountId(account.getAccountId())
                             .build())
                             : Collections.emptyList())
