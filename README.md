@@ -30,13 +30,13 @@ Navigate to the `SQL` folder and run the SQL files in the following order:
 2. `streaming-system-v2-postgres-seed.sql`
    Inserts the required data into the database.
 
-3. `business_logic.sql`
-   Creates the stored objects, such as functions, procedures and triggers.
-
 4. `audit_script.sql`
    Creates the stored objects, such as functions, procedures and triggers.
 
-5. `indexes.sql`
+4. `indexes.sql`
+   Creates the stored objects, such as functions, procedures and triggers.
+
+5. `business_logic.sql`
    Creates the stored objects, such as functions, procedures and triggers.
 
 After running these files, the PostgreSQL database is ready.
