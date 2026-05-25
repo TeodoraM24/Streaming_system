@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680" font-family="Arial, Helvetica, sans-serif">
+
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eef2f7"/>
+      <stop offset="100%" stop-color="#dde5f0"/>
+    </linearGradient>
+    <linearGradient id="springGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#6DB33F"/>
+      <stop offset="100%" stop-color="#4a8a2a"/>
+    </linearGradient>
+    <linearGradient id="pgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2d6a9f"/>
+      <stop offset="100%" stop-color="#1a3f63"/>
+    </linearGradient>
+    <linearGradient id="mongoGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10a044"/>
+      <stop offset="100%" stop-color="#075c27"/>
+    </linearGradient>
+    <linearGradient id="neo4jGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0181eb"/>
+      <stop offset="100%" stop-color="#014f99"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="4" stdDeviation="5" flood-color="#00000028"/>
+    </filter>
+    <marker id="arrowHead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#5a6a80"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="680" fill="url(#bgGrad)" rx="0"/>
+
+  <!-- ── Title ── -->
+  <text x="500" y="44" text-anchor="middle" font-size="21" font-weight="bold" fill="#1a202c">Streaming System — Cloud Database Architecture</text>
+  <text x="500" y="66" text-anchor="middle" font-size="12" fill="#718096">Spring Boot 3.2  ·  Java 21  ·  REST API  ·  JWT Security  ·  Spring Data JPA / MongoDB / Neo4j</text>
+  <line x1="40" y1="78" x2="960" y2="78" stroke="#c8d3df" stroke-width="1"/>
+
+  <!-- ══════════════════════════════════════════════
+       SPRING BOOT APPLICATION BOX
+  ══════════════════════════════════════════════ -->
+  <rect x="295" y="96" width="410" height="130" rx="14" fill="url(#springGrad)" filter="url(#shadow)"/>
+
+  <!-- Spring leaf shape (simple circle icon) -->
+  <circle cx="330" cy="128" r="14" fill="#3d7520"/>
+  <ellipse cx="330" cy="128" rx="8" ry="12" fill="#5aad32" transform="rotate(-30 330 128)"/>
+  <ellipse cx="330" cy="128" rx="8" ry="12" fill="#4a9628" transform="rotate(30 330 128)"/>
+
+  <text x="500" y="122" text-anchor="middle" font-size="18" font-weight="bold" fill="#ffffff">Spring Boot Application</text>
+  <text x="500" y="145" text-anchor="middle" font-size="13" fill="#d4f0b0">Streaming System — Backend API</text>
+  <line x1="315" y1="156" x2="685" y2="156" stroke="#5aad3255" stroke-width="1"/>
+  <text x="500" y="172" text-anchor="middle" font-size="11" fill="#c8eaa0">Controllers  ·  Services  ·  Repositories  ·  Security  ·  DTOs</text>
+  <text x="500" y="190" text-anchor="middle" font-size="11" fill="#c8eaa0">JPA Repos  ·  MongoRepositories  ·  Neo4jRepositories</text>
+
+  <!-- ══════════════════════════════════════════════
+       ARROWS  (Spring Boot → Databases)
+  ══════════════════════════════════════════════ -->
+
+  <!-- Arrow → PostgreSQL -->
+  <path d="M 380 226 C 360 290, 240 320, 185 368" fill="none" stroke="#5a6a80" stroke-width="2" stroke-dasharray="7,4" marker-end="url(#arrowHead)"/>
+  <!-- Label -->
+  <rect x="222" y="282" width="126" height="22" rx="6" fill="#ffffffcc"/>
+  <text x="285" y="297" text-anchor="middle" font-size="10" fill="#4a5568" font-weight="bold">Spring Data JPA</text>
+
+  <!-- Arrow → MongoDB -->
+  <line x1="500" y1="226" x2="500" y2="368" stroke="#5a6a80" stroke-width="2" stroke-dasharray="7,4" marker-end="url(#arrowHead)"/>
+  <!-- Label -->
+  <rect x="420" y="282" width="160" height="22" rx="6" fill="#ffffffcc"/>
+  <text x="500" y="297" text-anchor="middle" font-size="10" fill="#4a5568" font-weight="bold">Spring Data MongoDB</text>
+
+  <!-- Arrow → Neo4j -->
+  <path d="M 620 226 C 640 290, 760 320, 815 368" fill="none" stroke="#5a6a80" stroke-width="2" stroke-dasharray="7,4" marker-end="url(#arrowHead)"/>
+  <!-- Label -->
+  <rect x="652" y="282" width="140" height="22" rx="6" fill="#ffffffcc"/>
+  <text x="722" y="297" text-anchor="middle" font-size="10" fill="#4a5568" font-weight="bold">Spring Data Neo4j</text>
+
+  <!-- ══════════════════════════════════════════════
+       DATABASE BOX 1 — PostgreSQL / Render.com
+  ══════════════════════════════════════════════ -->
+  <rect x="40" y="370" width="290" height="256" rx="14" fill="url(#pgGrad)" filter="url(#shadow)"/>
+
+  <!-- Provider banner -->
+  <rect x="40" y="370" width="290" height="40" rx="14" fill="#7B47CC"/>
+  <rect x="40" y="396" width="290" height="14" fill="#7B47CC"/>
+  <text x="185" y="396" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">Render.com</text>
+
+  <!-- DB Icon (cylinder suggestion) -->
+  <ellipse cx="90" cy="443" rx="18" ry="6" fill="#1a3f63"/>
+  <rect x="72" y="437" width="36" height="22" fill="#2458a0"/>
+  <ellipse cx="90" cy="437" rx="18" ry="6" fill="#4a90d9"/>
+
+  <text x="185" y="442" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">PostgreSQL</text>
+  <text x="185" y="462" text-anchor="middle" font-size="11" fill="#a8c8e8">Relational Database</text>
+  <line x1="58" y1="474" x2="312" y2="474" stroke="#4a90d944" stroke-width="1"/>
+
+  <text x="62" y="492" font-size="11" fill="#cce0f8">&#x25CF;  Accounts &amp; Users</text>
+  <text x="62" y="510" font-size="11" fill="#cce0f8">&#x25CF;  Plans &amp; Subscriptions</text>
+  <text x="62" y="528" font-size="11" fill="#cce0f8">&#x25CF;  Payments &amp; Receipts</text>
+  <text x="62" y="546" font-size="11" fill="#cce0f8">&#x25CF;  Content, Movies, Shows</text>
+  <text x="62" y="564" font-size="11" fill="#cce0f8">&#x25CF;  Seasons &amp; Episodes</text>
+  <text x="62" y="582" font-size="11" fill="#cce0f8">&#x25CF;  Genres, Personnel, Reviews</text>
+  <text x="62" y="600" font-size="11" fill="#cce0f8">&#x25CF;  Profiles &amp; Lists</text>
+
+  <!-- ══════════════════════════════════════════════
+       DATABASE BOX 2 — MongoDB / Atlas
+  ══════════════════════════════════════════════ -->
+  <rect x="355" y="370" width="290" height="256" rx="14" fill="url(#mongoGrad)" filter="url(#shadow)"/>
+
+  <!-- Provider banner -->
+  <rect x="355" y="370" width="290" height="40" rx="14" fill="#00684A"/>
+  <rect x="355" y="396" width="290" height="14" fill="#00684A"/>
+  <text x="500" y="396" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">MongoDB Atlas</text>
+
+  <!-- DB Icon (leaf) -->
+  <ellipse cx="405" cy="443" rx="18" ry="6" fill="#075c27"/>
+  <rect x="387" y="437" width="36" height="22" fill="#0a8038"/>
+  <ellipse cx="405" cy="437" rx="18" ry="6" fill="#13c455"/>
+
+  <text x="500" y="442" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">MongoDB</text>
+  <text x="500" y="462" text-anchor="middle" font-size="11" fill="#9de8bc">Document Database</text>
+  <line x1="373" y1="474" x2="627" y2="474" stroke="#13c45544" stroke-width="1"/>
+
+  <text x="377" y="492" font-size="11" fill="#c8f5dc">&#x25CF;  accounts  (denormalized)</text>
+  <text x="377" y="510" font-size="11" fill="#c8f5dc">&#x25CF;  contents</text>
+  <text x="377" y="528" font-size="11" fill="#c8f5dc">&#x25CF;  genres</text>
+  <text x="377" y="546" font-size="11" fill="#c8f5dc">&#x25CF;  personnel</text>
+  <text x="377" y="564" font-size="11" fill="#c8f5dc">&#x25CF;  plans</text>
+  <text x="377" y="582" font-size="11" fill="#c8f5dc">&#x25CF;  Migrated from PostgreSQL</text>
+  <text x="377" y="600" font-size="11" fill="#c8f5dc">&#x25CF;  Embedded sub-documents</text>
+
+  <!-- ══════════════════════════════════════════════
+       DATABASE BOX 3 — Neo4j / AuraDB
+  ══════════════════════════════════════════════ -->
+  <rect x="670" y="370" width="290" height="256" rx="14" fill="url(#neo4jGrad)" filter="url(#shadow)"/>
+
+  <!-- Provider banner -->
+  <rect x="670" y="370" width="290" height="40" rx="14" fill="#004ea6"/>
+  <rect x="670" y="396" width="290" height="14" fill="#004ea6"/>
+  <text x="815" y="396" text-anchor="middle" font-size="13" font-weight="bold" fill="#ffffff">Neo4j AuraDB</text>
+
+  <!-- DB Icon (graph nodes suggestion) -->
+  <circle cx="720" cy="440" r="8" fill="#014f99"/>
+  <circle cx="720" cy="440" r="8" fill="#0095ff" fill-opacity="0.8"/>
+  <circle cx="737" cy="452" r="6" fill="#0076d6"/>
+  <circle cx="710" cy="453" r="6" fill="#0076d6"/>
+  <line x1="720" y1="440" x2="737" y2="452" stroke="#80c8ff" stroke-width="2"/>
+  <line x1="720" y1="440" x2="710" y2="453" stroke="#80c8ff" stroke-width="2"/>
+
+  <text x="815" y="442" text-anchor="middle" font-size="20" font-weight="bold" fill="#ffffff">Neo4j</text>
+  <text x="815" y="462" text-anchor="middle" font-size="11" fill="#9acfff">Graph Database</text>
+  <line x1="688" y1="474" x2="942" y2="474" stroke="#0095ff44" stroke-width="1"/>
+
+  <text x="692" y="492" font-size="11" fill="#cce5ff">&#x25CF;  Account &#x2192; HAS_USER</text>
+  <text x="692" y="510" font-size="11" fill="#cce5ff">&#x25CF;  Account &#x2192; HAS_SUBSCRIPTION</text>
+  <text x="692" y="528" font-size="11" fill="#cce5ff">&#x25CF;  Profile &#x2192; HAS_LIST</text>
+  <text x="692" y="546" font-size="11" fill="#cce5ff">&#x25CF;  Profile &#x2192; WROTE (Review)</text>
+  <text x="692" y="564" font-size="11" fill="#cce5ff">&#x25CF;  Movie &#x2192; HAS_GENRE</text>
+  <text x="692" y="582" font-size="11" fill="#cce5ff">&#x25CF;  Movie &#x2192; HAS_PERSONNEL</text>
+  <text x="692" y="600" font-size="11" fill="#cce5ff">&#x25CF;  17 node types + relationships</text>
+
+  <!-- ══════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════ -->
+  <line x1="40" y1="640" x2="960" y2="640" stroke="#c8d3df" stroke-width="1"/>
+  <text x="500" y="660" text-anchor="middle" font-size="11" fill="#8a9ab0">Streaming System  ·  Semester 1 Software  ·  Database Architecture Diagram</text>
+
+</svg>
