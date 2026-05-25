@@ -27,7 +27,7 @@ public class PaymentMethodController {
     @Autowired private PaymentMethodValidation paymentMethodValidation;
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<PaymentMethodDTO> getMyPaymentMethods(@AuthenticationPrincipal UserDetails userDetails) {
         Long accountId = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
@@ -54,7 +54,7 @@ public class PaymentMethodController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public PaymentMethodDTO create(@RequestBody PaymentMethodDTO dto) {
         paymentMethodValidation.validateCardNumber(dto.getCardNumber());
         paymentMethodValidation.validateExpirationMonth(dto.getExpirationMonth());

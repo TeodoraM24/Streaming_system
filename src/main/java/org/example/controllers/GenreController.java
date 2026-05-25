@@ -18,13 +18,13 @@ public class GenreController {
     @Autowired private GenreRepository repository;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<GenreDTO> getAll() {
         return repository.findAll().stream().map(GenreDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public GenreDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(GenreDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

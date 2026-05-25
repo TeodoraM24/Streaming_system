@@ -18,13 +18,13 @@ public class PlanController {
     @Autowired private PlanRepository repository;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<PlanDTO> getAll() {
         return repository.findAll().stream().map(PlanDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public PlanDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(PlanDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

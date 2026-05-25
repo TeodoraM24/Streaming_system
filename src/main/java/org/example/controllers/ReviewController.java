@@ -25,13 +25,13 @@ public class ReviewController {
 
     // USER: reviews are public reads — any authenticated user can browse
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<ReviewDTO> getAll() {
         return repository.findAll().stream().map(ReviewDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ReviewDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(ReviewDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -40,7 +40,7 @@ public class ReviewController {
     // USER: any authenticated user can post a review
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ReviewDTO create(@RequestBody ReviewDTO dto) {
         reviewValidationService.validateCreateReview(dto);
         Review entity = new Review(dto);

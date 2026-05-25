@@ -27,19 +27,19 @@ public class ShowController {
     @Autowired private ShowService showService;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<ShowDTO> getAll() {
         return repository.findAll().stream().map(ShowDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ShowDetailsDTO getById(@PathVariable Long id) {
         return showService.getShowDetails(id);
     }
 
     @GetMapping("/genre/{genreId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<ShowDTO> getShowsByGenre(@PathVariable Long genreId) {
         if (!genreRepository.existsById(genreId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Genre not found");

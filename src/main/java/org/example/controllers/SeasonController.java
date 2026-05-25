@@ -21,13 +21,13 @@ public class SeasonController {
     @Autowired private EntityManager entityManager;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<SeasonDTO> getAll() {
         return repository.findAll().stream().map(SeasonDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public SeasonDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(SeasonDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

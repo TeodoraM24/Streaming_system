@@ -41,7 +41,7 @@ public class ListsController {
     // USER: create a list — ownership is established via profileId in the DTO
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ListsDTO create(@RequestBody ListsDTO dto) {
         Lists entity = new Lists(dto);
         if (dto.getProfileId() != null) {

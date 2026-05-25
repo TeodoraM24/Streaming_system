@@ -18,13 +18,13 @@ public class PersonnelController {
     @Autowired private PersonnelRepository repository;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<PersonnelDTO> getAll() {
         return repository.findAll().stream().map(PersonnelDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public PersonnelDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(PersonnelDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

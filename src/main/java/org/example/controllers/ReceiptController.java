@@ -28,7 +28,7 @@ public class ReceiptController {
 
     // USER: returns receipts belonging to the authenticated user's account
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<ReceiptDTO> getMyReceipts(@AuthenticationPrincipal UserDetails userDetails) {
         Long accountId = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))

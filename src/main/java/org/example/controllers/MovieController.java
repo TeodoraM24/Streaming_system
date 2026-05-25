@@ -30,13 +30,13 @@ public class MovieController {
     private GenreRepository genreRepository;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<MovieDTO> getAll() {
         return movieRepository.findAll().stream().map(MovieDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public MovieDTO getById(@PathVariable Long id) {
         return movieRepository.findById(id).map(MovieDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -67,7 +67,7 @@ public class MovieController {
 
 
     @GetMapping("/genre/{genreId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<MovieDTO> getMoviesByGenre(@PathVariable Long genreId) {
         // Validate that the genre actually exists — otherwise 404
         if (!genreRepository.existsById(genreId)) {

@@ -28,7 +28,7 @@ public class SubscriptionController {
     @Autowired private EntityManager entityManager;
 
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public SubscriptionDTO getMySubscription(@AuthenticationPrincipal UserDetails userDetails) {
         Long accountId = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
@@ -54,7 +54,7 @@ public class SubscriptionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public SubscriptionDTO create(@RequestBody SubscriptionDTO dto) {
         boolean hasActive = repository.findByAccount_AccountId(dto.getAccountId())
                 .map(s -> s.getStatus() == SubscriptionStatus.ACTIVE)

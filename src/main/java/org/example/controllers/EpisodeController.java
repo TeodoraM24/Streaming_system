@@ -21,13 +21,13 @@ public class EpisodeController {
     @Autowired private EntityManager entityManager;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<EpisodeDTO> getAll() {
         return repository.findAll().stream().map(EpisodeDTO::convertToDTO).toList();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public EpisodeDTO getById(@PathVariable Long id) {
         return repository.findById(id).map(EpisodeDTO::convertToDTO)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

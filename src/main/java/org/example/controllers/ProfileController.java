@@ -26,7 +26,7 @@ public class ProfileController {
 
     // USER: returns all profiles belonging to the authenticated user's account
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<ProfileDTO> getMyProfiles(@AuthenticationPrincipal UserDetails userDetails) {
         Long accountId = userRepository.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
@@ -54,7 +54,7 @@ public class ProfileController {
     // USER: create a profile under their own account
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ProfileDTO create(@RequestBody ProfileDTO dto) {
         Profile profile = new Profile(dto);
         if (dto.getAccountId() != null) {
