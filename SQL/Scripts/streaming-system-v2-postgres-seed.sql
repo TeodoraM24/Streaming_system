@@ -13,8 +13,10 @@ BEGIN;
 -- =========================================================
 
 INSERT INTO accounts (account_id, firstname, lastname, phonenumber, mail) VALUES (1, 'Test', 'User', '12345678', 'testuser@example.com');
+INSERT INTO accounts (account_id, firstname, lastname, phonenumber, mail) VALUES (2, 'Test', 'Sub', '99999999', 'testsub@example.com');
 
 INSERT INTO users (users_id, username, password, role, accounts_account_id) VALUES (1, 'testuser', '$2a$10$u1c5c0cQdK9ZxB2H0C8q1e5o9jvG2q5dWzqJfQqf9mQxqJf5cQ9l2', 'USER', 1);
+INSERT INTO users (users_id, username, password, role, accounts_account_id) VALUES (2, 'PostTest', '$2b$12$aqZQ8M3o5UtE4c1FkrKoYuYaNFxYSOAe8CSaNkS5FDAQmurex.7Eq', 'ADMIN', 1);
 
 INSERT INTO profile (profile_id, profilename, accounts_account_id) VALUES
 (1, 'Umair', 1),
@@ -38,8 +40,7 @@ INSERT INTO plan (plan_id, name, description, price, currency, active) VALUES
 (2, 'PREMIUM',  'Premium plan', 999.00, 'DKK', TRUE);
 
 INSERT INTO subscription (subscription_id, startdate, enddate, next_bill_date, status, accounts_account_id, plan_plan_id) VALUES
-(1, CURRENT_DATE - 20, CURRENT_DATE + 10, CURRENT_DATE + 10, 'ACTIVE', 1, 1),
-(2, CURRENT_DATE - 60, CURRENT_DATE - 10, CURRENT_DATE - 10, 'EXPIRED', 1, 1);
+(1, CURRENT_DATE - 20, CURRENT_DATE + 10, CURRENT_DATE + 10, 'ACTIVE', 1, 1);
 
 INSERT INTO paymentmethod (paymentmethod_id, card_number, expiration_month, expiration_year, cvc, type, default_paymentmethod, accounts_account_id) VALUES
 (1, '4242 4242 4242 4242', 12, 2030, '123', 'CARD', TRUE, 1),
