@@ -231,7 +231,7 @@ class PaymentMethodValidationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "1234567812345678",      // valid 3 digits
+            "123",      // valid 3 digits
             "111",      // valid 3 digits
             "999"       // valid 3 digits
     })
