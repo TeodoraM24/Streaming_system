@@ -42,7 +42,7 @@ class ReviewValidationServiceTest {
 
         // ------------------- INVALID BOUNDARIES -------------------
         @ParameterizedTest
-        @ValueSource(ints = {0, 61, 62})
+        @ValueSource(ints = {0, 61, 62, 50})
         @DisplayName("Invalid title length boundaries should throw exception")
         void validateTitle_invalidBoundaries(int length) {
             // Arrange
