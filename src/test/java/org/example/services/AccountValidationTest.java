@@ -62,7 +62,7 @@ class AccountValidationTest {
             "34912345", // Valid: upper boundary in 344-349 range
             "35612345", // Valid: lower boundary in 356-357 range
             "49812345", // Valid: lower boundary in 498-499 range
-            "82912345T"  // Valid: 3-digit prefix
+            "82912345"  // Valid: 3-digit prefix
     })
     @DisplayName("Valid account phone numbers return no errors")
     void validatePhoneNumber_validValues(String phoneNumber) {
