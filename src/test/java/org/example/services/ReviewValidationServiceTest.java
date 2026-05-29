@@ -27,7 +27,7 @@ class ReviewValidationServiceTest {
 
         // ------------------- VALID BOUNDARIES -------------------
         @ParameterizedTest
-        @ValueSource(ints = {1, 30, 60})
+        @ValueSource(ints = {1, 2, 30, 59, 60})
         @DisplayName("Valid title boundaries should not throw exception")
         void validateTitle_validBoundaries(int length) {
             // Arrange
@@ -42,7 +42,7 @@ class ReviewValidationServiceTest {
 
         // ------------------- INVALID BOUNDARIES -------------------
         @ParameterizedTest
-        @ValueSource(ints = {0, 61})
+        @ValueSource(ints = {0, 61, 62})
         @DisplayName("Invalid title length boundaries should throw exception")
         void validateTitle_invalidBoundaries(int length) {
             // Arrange
@@ -59,7 +59,7 @@ class ReviewValidationServiceTest {
         @ParameterizedTest
         @NullSource
         @EmptySource
-        @DisplayName("Missing title should throw exception")
+        @DisplayName("Invalid missing title should throw exception")
         void validateTitle_missingValues(String title) {
             // Arrange
             String missingTitle = title;
@@ -78,7 +78,7 @@ class ReviewValidationServiceTest {
 
         // ------------------- VALID BOUNDARIES -------------------
         @ParameterizedTest
-        @ValueSource(ints = {1, 250, 500})
+        @ValueSource(ints = {1, 2, 250, 499, 500})
         @DisplayName("Valid comment boundaries should not throw exception")
         void validateComment_validBoundaries(int length) {
             // Arrange
@@ -93,7 +93,7 @@ class ReviewValidationServiceTest {
 
         // ------------------- INVALID BOUNDARIES -------------------
         @ParameterizedTest
-        @ValueSource(ints = {0, 501})
+        @ValueSource(ints = {0, 501, 502})
         @DisplayName("Invalid comment length boundaries should throw exception")
         void validateComment_invalidBoundaries(int length) {
             // Arrange
@@ -109,7 +109,7 @@ class ReviewValidationServiceTest {
         @ParameterizedTest
         @NullSource
         @EmptySource
-        @DisplayName("Missing comment should throw exception")
+        @DisplayName("Invalid missing comment should throw exception")
         void validateComment_missingValues(String comment) {
             // Arrange
             String missingComment = comment;
@@ -128,7 +128,7 @@ class ReviewValidationServiceTest {
 
         // ------------------- VALID BOUNDARIES -------------------
         @ParameterizedTest
-        @ValueSource(shorts = {1, 5, 10})
+        @ValueSource(shorts = {1, 2, 5, 9, 10})
         @DisplayName("Valid rating boundaries should not throw exception")
         void validateRating_validBoundaries(short rating) {
             // Arrange
@@ -144,7 +144,7 @@ class ReviewValidationServiceTest {
         // ------------------- INVALID BOUNDARIES -------------------
         @ParameterizedTest
         @NullSource
-        @ValueSource(shorts = {0, 11})
+        @ValueSource(shorts = {-2, -1, 0, 11, 12})
         @DisplayName("Invalid rating boundaries should throw exception")
         void validateRating_invalidBoundaries(Short rating) {
             // Arrange
@@ -159,7 +159,7 @@ class ReviewValidationServiceTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"4.3"})
-        @DisplayName("Decimal rating values should fail")
+        @DisplayName("Invalid decimal rating values should fail")
         void validateRating_decimalValueShouldFail(String rating) {
             // Arrange
             String decimalRating = rating;

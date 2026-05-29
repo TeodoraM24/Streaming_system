@@ -28,7 +28,10 @@ class UserValidationServiceTest {
             "AnneØrå9",                     // Valid: Danish chars + Alphanumeric
             "Abcdefgh",                     // Valid: Lower boundary (8 chars)
             "Abcdefghijklmnopqrstuvwxyzab", // Valid: Upper boundary (28 chars)
-            "12345678" // Valid: Numbers only (8 chars)
+            "12345678" ,                      // Valid: Numbers only (8 chars)
+            "Abcdefg1a" ,                   // (9 char - Valid)
+            "Abcdefghijklmnopqrstuvwxy1a",  //(27 chars- Valid)
+            "Abcdefghijklmno1a"             //(18 char valid)
     })
     @DisplayName("Valid usernames return no errors")
     void validateUsername_validValues(String username) {
@@ -62,8 +65,10 @@ class UserValidationServiceTest {
             "Password123!",                 // Valid: Normal
             "Æøå1234!",                     // Valid: Danish characters
             "Abcdef1!",                     // Valid: Lower boundary (8 chars)
-            "Abcdefghijklmnopqrstuvwxyz1!", // Valid: Upper boundary (28 chars)
-            "François2!"                    // Valid: Special char + Number + Upper (ç is special)
+            "Abcdefghijklmnopqrstuvwxyz1!",  //(28 chars - Valid)
+            "Abcdefg1!",                     //(9 char - Valid)
+            "Abcdefghijklmnopqrstuvwxy1!",   //(27 chars- Valid)
+            "Abcdefghijklmno1!"             //(18 char valid)
     })
     @DisplayName("Valid passwords return no errors")
     void validatePassword_validValues(String password) {
