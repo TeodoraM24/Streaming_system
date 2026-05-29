@@ -32,7 +32,6 @@ class UserValidationServiceTest {
             "Abcdefg1a" ,                   // (9 char - Valid)
             "Abcdefghijklmnopqrstuvwxy1a",  //(27 chars- Valid)
             "Abcdefghijklmno1a",             //(18 char valid)
-            "Abcdefghijklmnopqrstuvwxyzabc!!!!!!!"
     })
 
     @DisplayName("Valid usernames return no errors")
