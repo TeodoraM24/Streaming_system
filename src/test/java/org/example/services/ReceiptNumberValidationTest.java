@@ -20,7 +20,7 @@ class ReceiptNumberValidationTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "123456789123",        // 12 digits (valid middle value)
+            "12345678912311111",        // 12 digits (valid middle value)
             "1111111111",          // 10 digits (valid lower boundary)
             "11111111111",         // 11 digits (valid lower boundary)
             "11111111111111",      // 14 digits (valid upper boundary)
