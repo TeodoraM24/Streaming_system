@@ -60,8 +60,10 @@ class PostmanTest {
     void streamflixPostmanCollectionPassesAgainstTestcontainerDatabase() throws IOException, InterruptedException {
         assertTrue(Files.exists(COLLECTION), "Postman collection not found: " + COLLECTION.toAbsolutePath());
 
+        String npx = System.getProperty("os.name").toLowerCase().contains("win") ? "npx.cmd" : "npx";
+
         List<String> command = List.of(
-                "npx.cmd", "--yes", "newman", "run", COLLECTION.toString(),
+                npx, "--yes", "newman", "run", COLLECTION.toString(),
                 "--color", "off",
                 "--env-var", "domain=http://localhost:" + port,
                 "--env-var", "bearerToken=",
