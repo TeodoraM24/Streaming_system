@@ -2,7 +2,7 @@ name: CI WORKFLOW
 
 on:
   push:
-    branches: [ main ]
+    branches: [ Teodora ]
   pull_request:
     types: [opened, synchronize, reopened]
 
