@@ -79,6 +79,6 @@ class PostmanTest {
         // Outcomment sout to remove output
         System.out.println(output);
 
-        assertEquals(10, process.waitFor(), "Newman collection run failed:\n" + output);
+        assertEquals(0, process.waitFor(), "Newman collection run failed:\n" + output);
     }
 }
