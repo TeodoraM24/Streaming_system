@@ -31,8 +31,10 @@ class UserValidationServiceTest {
             "12345678" ,                      // Valid: Numbers only (8 chars)
             "Abcdefg1a" ,                   // (9 char - Valid)
             "Abcdefghijklmnopqrstuvwxy1a",  //(27 chars- Valid)
-            "Abcdefghijklmno1a"             //(18 char valid)
+            "Abcdefghijklmno1a",             //(18 char valid)
+            "Abcdefghijklmnopqrstuvwxyzabc!!!!!!!"
     })
+
     @DisplayName("Valid usernames return no errors")
     void validateUsername_validValues(String username) {
         List<String> errors = validationService.validateUsername(username);
