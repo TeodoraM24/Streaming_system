@@ -44,8 +44,8 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_EXPIRATION: 86400000
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/dummy
-          SPRING_DATASOURCE_USERNAME:
-          SPRING_DATASOURCE_PASSWORD: 123456
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
           SPRING_JPA_HIBERNATE_DDL_AUTO: none
           SPRING_NEO4J_URI: bolt://localhost:7687
           SPRING_DATA_MONGODB_URI: mongodb://localhost:27017/dummy
