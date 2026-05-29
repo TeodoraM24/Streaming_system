@@ -61,7 +61,7 @@ class PostmanTest {
         assertTrue(Files.exists(COLLECTION), "Postman collection not found: " + COLLECTION.toAbsolutePath());
 
         List<String> command = List.of(
-                "npx", "--yes", "newman", "run", COLLECTION.toString(),
+                "npx.cmd", "--yes", "newman", "run", COLLECTION.toString(),
                 "--color", "off",
                 "--env-var", "domain=http://localhost:" + port,
                 "--env-var", "bearerToken=",
