@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-    List<Account> findTop10ByOrderByContent_RatingDesc();
+    List<Movie> findTop10ByOrderByContent_RatingDesc();
     List<Movie> findByContent_Genres_GenreId(Long genreId);
 }
 
